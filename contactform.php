@@ -75,7 +75,7 @@ class Contactform extends Module implements WidgetInterface
         if (($id_customer_thread = (int)Tools::getValue('id_customer_thread')) && $token = Tools::getValue('token')) {
             $cm = new CustomerThread($id_customer_thread);
             if ($cm->token == $token) {
-                $this->customer_thread = $this->context->controller->objectSerializer->toArray($cm);
+                $this->customer_thread = $this->context->controller->objectPresenter->present($cm);
                 $order = new Order((int)$this->customer_thread['id_order']);
                 if (Validate::isLoadedObject($order)) {
                     $customer_thread['reference'] = $order->getUniqReference();
@@ -133,7 +133,7 @@ class Contactform extends Module implements WidgetInterface
         } elseif ((int)$this->customer_thread['id_order'] > 0) {
             $myOrder = new Order($this->customer_thread['id_order']);
             if (Validate::isLoadedObject($myOrder)) {
-                $orders[$myOrder->id] = $this->context->controller->objectSerializer->toArray($myOrder);
+                $orders[$myOrder->id] = $this->context->controller->objectPresenter->present($myOrder);
                 $orders[$myOrder->id]['id_order'] = $myOrder->id;
                 $orders[$myOrder->id]['products'] = $myOrder->getProducts();
             }
@@ -144,7 +144,7 @@ class Contactform extends Module implements WidgetInterface
             if (isset($this->customer_thread['id_order'])) {
                 $id_order = (int)$this->customer_thread['id_order'];
             }
-            $orders[$id_order]['products'][(int)$this->customer_thread['id_product']] = $this->context->controller->objectSerializer->toArray(new Product((int)$this->customer_thread['id_product']));
+            $orders[$id_order]['products'][(int)$this->customer_thread['id_product']] = $this->context->controller->objectPresenter->present(new Product((int)$this->customer_thread['id_product']));
         }
 
         return $orders;
