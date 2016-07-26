@@ -155,6 +155,7 @@ class Contactform extends Module implements WidgetInterface
         $extension = array('.txt', '.rtf', '.doc', '.docx', '.pdf', '.zip', '.png', '.jpeg', '.gif', '.jpg');
         $file_attachment = Tools::fileAttachment('fileUpload');
         $message = Tools::getValue('message');
+
         if (!($from = trim(Tools::getValue('from'))) || !Validate::isEmail($from)) {
             $this->context->controller->errors[] = $this->l('Invalid email address.');
         } elseif (!$message) {
@@ -175,7 +176,15 @@ class Contactform extends Module implements WidgetInterface
 
             $id_order = (int)Tools::getValue('id_order');
 
-            if (($id_customer_thread = CustomerThread::getIdCustomerThreadByEmailAndIdOrder($from, $id_order) )) {
+            if (!((
+                    ($id_customer_thread = (int)Tools::getValue('id_customer_thread'))
+                    && (int)Db::getInstance()->getValue('
+						SELECT cm.id_customer_thread FROM '._DB_PREFIX_.'customer_thread cm
+						WHERE cm.id_customer_thread = '.(int)$id_customer_thread.' AND cm.id_shop = '.(int)$this->context->shop->id.'
+						AND token = \''.pSQL(Tools::getValue('token')).'\'')
+                ) || (
+                    $id_customer_thread = CustomerThread::getIdCustomerThreadByEmailAndIdOrder($from, $id_order)
+                ))) {
                 if ($contact->customer_service) {
                     if ((int)$id_customer_thread) {
                         $ct = new CustomerThread($id_customer_thread);
@@ -216,7 +225,7 @@ class Contactform extends Module implements WidgetInterface
                         $cm->ip_address = (int)ip2long(Tools::getRemoteAddr());
                         $cm->user_agent = $_SERVER['HTTP_USER_AGENT'];
                         if (!$cm->add()) {
-                            $$this->context->controller->errors[] = $this->l('An error occurred while sending the message.');
+                            $this->context->controller->errors[] = $this->l('An error occurred while sending the message.');
                         }
                     } else {
                         $this->context->controller->errors[] = $this->l('An error occurred while sending the message.');
