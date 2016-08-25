@@ -86,7 +86,7 @@ class Contactform extends Module implements WidgetInterface
         $this->contact['contacts'] = $this->getTemplateVarContact();
         $this->contact['message'] = html_entity_decode(Tools::getValue('message'));
 
-        if (!(bool)Configuration::get('PS_CATALOG_MODE')) {
+        if (!(bool)Configuration::isCatalogMode()) {
             $this->contact['orders'] = $this->getTemplateVarOrders();
         }
 
