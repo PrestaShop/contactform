@@ -59,10 +59,6 @@ class Contactform extends Module implements WidgetInterface
     {
         $template_file = 'views/templates/widget/contactform.tpl';
 
-        if (Tools::isSubmit('submitMessage')) {
-            $this->sendMessage();
-        }
-
         if (!$this->isCached($template_file, $this->getCacheId())) {
             $this->smarty->assign($this->getWidgetVariables($hookName, $configuration));
         }
@@ -72,6 +68,19 @@ class Contactform extends Module implements WidgetInterface
 
     public function getWidgetVariables($hookName = null, array $configuration = [])
     {
+        $notifications = false;
+        if (Tools::isSubmit('submitMessage')) {
+            $this->sendMessage();
+
+            if (!empty($this->context->controller->errors)) {
+                $notifications['messages'] = $this->context->controller->errors;
+                $notifications['nw_error'] = true;
+            } elseif (!empty($this->context->controller->success)) {
+                $notifications['messages'] = $this->context->controller->success;
+                $notifications['nw_error'] = false;
+            }
+        }
+
         if (($id_customer_thread = (int)Tools::getValue('id_customer_thread')) && $token = Tools::getValue('token')) {
             $cm = new CustomerThread($id_customer_thread);
             if ($cm->token == $token) {
@@ -98,6 +107,7 @@ class Contactform extends Module implements WidgetInterface
 
         return [
             'contact' => $this->contact,
+            'notifications' => $notifications,
         ];
     }
 
@@ -176,7 +186,7 @@ class Contactform extends Module implements WidgetInterface
 
             $id_order = (int)Tools::getValue('id_order');
 
-            if (!((
+            if ((
                     ($id_customer_thread = (int)Tools::getValue('id_customer_thread'))
                     && (int)Db::getInstance()->getValue('
 						SELECT cm.id_customer_thread FROM '._DB_PREFIX_.'customer_thread cm
@@ -184,7 +194,7 @@ class Contactform extends Module implements WidgetInterface
 						AND token = \''.pSQL(Tools::getValue('token')).'\'')
                 ) || (
                     $id_customer_thread = CustomerThread::getIdCustomerThreadByEmailAndIdOrder($from, $id_order)
-                ))) {
+                )) {
                 if ($contact->customer_service) {
                     if ((int)$id_customer_thread) {
                         $ct = new CustomerThread($id_customer_thread);
