@@ -35,6 +35,16 @@
       <p>{l s='If you would like to add a comment about your order, please write it in the field below.'}</p>
     </header>
 
+    {if $notifications}
+      <div class="notification {if $notifications.nw_error}notification-error{else}notification-success{/if}">
+        <ul>
+          {foreach $notifications.messages as $notif}
+            <li>{$notif}</li>
+          {/foreach}
+        </ul>
+      </div>
+    {/if}
+
     <section class="form-fields">
 
       <label>
@@ -55,6 +65,7 @@
         <label>
           <span>{l s='Order reference'}</span>
           <select name="id_order">
+            <option value="">{l s='Select reference'}</option>
             {foreach from=$contact.orders item=order}
               <option value="{$order.id_order}">{$order.reference}</option>
             {/foreach}
