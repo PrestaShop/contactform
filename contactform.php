@@ -89,6 +89,7 @@ class Contactform extends Module implements WidgetInterface
 
         $this->contact['contacts'] = $this->getTemplateVarContact();
         $this->contact['message'] = html_entity_decode(Tools::getValue('message'));
+        $this->contact['allow_file_upload'] = (bool) Configuration::get('PS_CUSTOMER_SERVICE_FILE_UPLOAD');
 
         if (!(bool)Configuration::isCatalogMode()) {
             $this->contact['orders'] = $this->getTemplateVarOrders();
