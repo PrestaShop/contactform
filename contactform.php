@@ -232,13 +232,15 @@ class Contactform extends Module implements WidgetInterface
                         if (!$cm->add()) {
                             $this->context->controller->errors[] = $this->l('An error occurred while sending the message.');
                         }
+                    } else {
+                        $mailAlreadySend = true;
                     }
                 } else {
                     $this->context->controller->errors[] = $this->l('An error occurred while sending the message.');
                 }
             }
 
-            if (!count($this->context->controller->errors)) {
+            if (!count($this->context->controller->errors) && empty($mailAlreadySend)) {
                 $var_list = [
                     '{order_name}' => '-',
                     '{attached_file}' => '-',
