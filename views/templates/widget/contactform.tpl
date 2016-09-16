@@ -28,7 +28,7 @@
 {/block}
 
 <section class="login-form">
-  <form action="#" method="post">
+  <form action="{$urls.pages.contact}" method="post" {if $contact.allow_file_upload}enctype="multipart/form-data"{/if}>
 
     <header>
       <h1 class="h3">{l s='Send a message'}</h1>
@@ -73,10 +73,12 @@
         </label>
       {/if}
 
-      <label>
-        <span>{l s='Attach File'}</span>
-        <input type="file" name="fileUpload" />
-      </label>
+      {if $contact.allow_file_upload}
+        <label>
+          <span>{l s='Attach File'}</span>
+          <input type="file" name="fileUpload" />
+        </label>
+      {/if}
 
       <label>
         <span>{l s='Message'}</span>
