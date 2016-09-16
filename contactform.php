@@ -214,17 +214,24 @@ class Contactform extends Module implements WidgetInterface
                 }
 
                 if ($ct->id) {
-                    $cm = new CustomerMessage();
-                    $cm->id_customer_thread = $ct->id;
-                    $cm->message = $message;
-                    if (isset($file_attachment['rename']) && !empty($file_attachment['rename']) && rename($file_attachment['tmp_name'], _PS_UPLOAD_DIR_.basename($file_attachment['rename']))) {
-                        $cm->file_name = $file_attachment['rename'];
-                        @chmod(_PS_UPLOAD_DIR_.basename($file_attachment['rename']), 0664);
-                    }
-                    $cm->ip_address = (int)ip2long(Tools::getRemoteAddr());
-                    $cm->user_agent = $_SERVER['HTTP_USER_AGENT'];
-                    if (!$cm->add()) {
-                        $this->context->controller->errors[] = $this->l('An error occurred while sending the message.');
+
+                    $lastMessage = CustomerMessage::getLastMessageForCustomerThread($ct->id);
+                    $testFileUpload = (isset($file_attachment['rename']) && !empty($file_attachment['rename']));
+
+                    // if last message is the same as new message (and no file upload), do not consider this contact
+                    if ($lastMessage != $message || $testFileUpload) {
+                        $cm = new CustomerMessage();
+                        $cm->id_customer_thread = $ct->id;
+                        $cm->message = $message;
+                        if ($testFileUpload && rename($file_attachment['tmp_name'], _PS_UPLOAD_DIR_ . basename($file_attachment['rename']))) {
+                            $cm->file_name = $file_attachment['rename'];
+                            @chmod(_PS_UPLOAD_DIR_ . basename($file_attachment['rename']), 0664);
+                        }
+                        $cm->ip_address = (int)ip2long(Tools::getRemoteAddr());
+                        $cm->user_agent = $_SERVER['HTTP_USER_AGENT'];
+                        if (!$cm->add()) {
+                            $this->context->controller->errors[] = $this->l('An error occurred while sending the message.');
+                        }
                     }
                 } else {
                     $this->context->controller->errors[] = $this->l('An error occurred while sending the message.');
