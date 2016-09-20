@@ -270,7 +270,7 @@ class Contactform extends Module implements WidgetInterface
                     Mail::Send(
                         $this->context->language->id,
                         'contact_form',
-                        ((isset($ct) && Validate::isLoadedObject($ct)) ? sprintf(Mail::l('Your message has been correctly sent #ct%1$s #tc%2$s'), $ct->id, $ct->token) : Mail::l('Your message has been correctly sent')),
+                        ((isset($ct) && Validate::isLoadedObject($ct)) ? $this->trans('Your message has been correctly sent #ct%thread_id% #tc%thread_token%', array('%thread_id%' => $ct->id, '%thread_token%' => $ct->token), 'Emails.Subject') : $this->trans('Your message has been correctly sent', array(), 'Emails.Subject')),
                         $var_list,
                         $from,
                         null,
@@ -282,7 +282,7 @@ class Contactform extends Module implements WidgetInterface
                     if (!Mail::Send(
                         $this->context->language->id,
                         'contact',
-                        Mail::l('Message from contact form').' [no_sync]',
+                        $this->trans('Message from contact form', array(), 'Emails.Subject').' [no_sync]',
                         $var_list,
                         $contact->email,
                         $contact->name,
@@ -298,7 +298,7 @@ class Contactform extends Module implements WidgetInterface
                     ) || !Mail::Send(
                         $this->context->language->id,
                         'contact_form',
-                        ((isset($ct) && Validate::isLoadedObject($ct)) ? sprintf(Mail::l('Your message has been correctly sent #ct%1$s #tc%2$s'), $ct->id, $ct->token) : Mail::l('Your message has been correctly sent')),
+                        ((isset($ct) && Validate::isLoadedObject($ct)) ? $this->trans('Your message has been correctly sent #ct%thread_id% #tc%thread_token%', array('%thread_id%' => $ct->id, '%thread_token%' => $ct->token), 'Emails.Subject') : $this->trans('Your message has been correctly sent', array(), 'Emails.Subject')),
                         $var_list,
                         $from,
                         null,
