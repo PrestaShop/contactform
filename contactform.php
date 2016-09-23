@@ -93,6 +93,8 @@ class Contactform extends Module implements WidgetInterface
 
         if (!(bool)Configuration::isCatalogMode()) {
             $this->contact['orders'] = $this->getTemplateVarOrders();
+        } else {
+            $this->contact['orders'] = array();
         }
 
         if ($this->customer_thread['email']) {
@@ -109,7 +111,7 @@ class Contactform extends Module implements WidgetInterface
 
     public function getTemplateVarContact()
     {
-        $contacts = [];
+        $contacts = array();
         $all_contacts = Contact::getContacts($this->context->language->id);
 
         foreach ($all_contacts as $one_contact_id => $one_contact) {
@@ -125,7 +127,7 @@ class Contactform extends Module implements WidgetInterface
 
     public function getTemplateVarOrders()
     {
-        $orders = [];
+        $orders = array();
 
         if (!isset($this->customer_thread['id_order']) && $this->context->customer->isLogged()) {
             $customer_orders = Order::getCustomerOrders($this->context->customer->id);
