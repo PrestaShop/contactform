@@ -46,7 +46,7 @@ class Contactform extends Module implements WidgetInterface
         parent::__construct();
 
         $this->displayName = $this->trans('Contact form', array(), 'Modules.Contactform.Admin');
-        $this->description = $this->trans('Description for contact form module', array(), 'Modules.Contactform.Admin);
+        $this->description = $this->trans('Description for contact form module', array(), 'Modules.Contactform.Admin');
         $this->ps_versions_compliancy = array('min' => '1.7.0.0', 'max' => _PS_VERSION_);
     }
 
