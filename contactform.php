@@ -45,8 +45,8 @@ class Contactform extends Module implements WidgetInterface
         $this->bootstrap = true;
         parent::__construct();
 
-        $this->displayName = $this->l('Contact form');
-        $this->description = $this->l('Description for contact form module');
+        $this->displayName = $this->trans('Contact form', array(), 'Modules.Contactform.Admin');
+        $this->description = $this->trans('Description for contact form module', array(), 'Modules.Contactform.Admin);
         $this->ps_versions_compliancy = array('min' => '1.7.0.0', 'max' => _PS_VERSION_);
     }
 
@@ -165,17 +165,17 @@ class Contactform extends Module implements WidgetInterface
         $message = Tools::getValue('message');
 
         if (!($from = trim(Tools::getValue('from'))) || !Validate::isEmail($from)) {
-            $this->context->controller->errors[] = $this->l('Invalid email address.');
+            $this->context->controller->errors[] = $this->trans('Invalid email address.', array(), 'Modules.Contactform.Shop');
         } elseif (!$message) {
-            $this->context->controller->errors[] = $this->l('The message cannot be blank.');
+            $this->context->controller->errors[] = $this->trans('The message cannot be blank.', array(), 'Modules.Contactform.Shop');
         } elseif (!Validate::isCleanHtml($message)) {
-            $this->context->controller->errors[] = $this->l('Invalid message');
+            $this->context->controller->errors[] = $this->trans('Invalid message');
         } elseif (!($id_contact = (int)Tools::getValue('id_contact')) || !(Validate::isLoadedObject($contact = new Contact($id_contact, $this->context->language->id)))) {
-            $this->context->controller->errors[] = $this->l('Please select a subject from the list provided. ');
+            $this->context->controller->errors[] = $this->trans('Please select a subject from the list provided. ', array(), 'Modules.Contactform.Shop');
         } elseif (!empty($file_attachment['name']) && $file_attachment['error'] != 0) {
-            $this->context->controller->errors[] = $this->l('An error occurred during the file-upload process.');
+            $this->context->controller->errors[] = $this->trans('An error occurred during the file-upload process.', array(), 'Modules.Contactform.Shop');
         } elseif (!empty($file_attachment['name']) && !in_array(Tools::strtolower(substr($file_attachment['name'], -4)), $extension) && !in_array(Tools::strtolower(substr($file_attachment['name'], -5)), $extension)) {
-            $this->context->controller->errors[] = $this->l('Bad file extension');
+            $this->context->controller->errors[] = $this->trans('Bad file extension', array(), 'Modules.Contactform.Shop');
         } else {
             $customer = $this->context->customer;
             if (!$customer->id) {
@@ -316,13 +316,13 @@ class Contactform extends Module implements WidgetInterface
                         null,
                         $contact->email
                     )) {
-                        $this->context->controller->errors[] = $this->l('An error occurred while sending the message.');
+                        $this->context->controller->errors[] = $this->trans('An error occurred while sending the message.', array(), 'Modules.Contactform.Shop');
                     }
                 }
             }
 
             if (!count($this->context->controller->errors)) {
-                $this->context->controller->success[] = $this->l('Your message has been successfully sent to our team.');
+                $this->context->controller->success[] = $this->trans('Your message has been successfully sent to our team.', array(), 'Modules.Contactform.Shop');
             }
         }
     }
