@@ -165,11 +165,11 @@ class Contactform extends Module implements WidgetInterface
         $message = Tools::getValue('message');
 
         if (!($from = trim(Tools::getValue('from'))) || !Validate::isEmail($from)) {
-            $this->context->controller->errors[] = $this->trans('Invalid email address.', array(), 'Modules.Contactform.Shop');
+            $this->context->controller->errors[] = $this->trans('Invalid email address.', array(), 'Shop.Notifications.Error');
         } elseif (!$message) {
-            $this->context->controller->errors[] = $this->trans('The message cannot be blank.', array(), 'Modules.Contactform.Shop');
+            $this->context->controller->errors[] = $this->trans('The message cannot be blank.', array(), 'Shop.Notifications.Error');
         } elseif (!Validate::isCleanHtml($message)) {
-            $this->context->controller->errors[] = $this->trans('Invalid message');
+            $this->context->controller->errors[] = $this->trans('Invalid message', array(), 'Shop.Notifications.Error');
         } elseif (!($id_contact = (int)Tools::getValue('id_contact')) || !(Validate::isLoadedObject($contact = new Contact($id_contact, $this->context->language->id)))) {
             $this->context->controller->errors[] = $this->trans('Please select a subject from the list provided. ', array(), 'Modules.Contactform.Shop');
         } elseif (!empty($file_attachment['name']) && $file_attachment['error'] != 0) {
