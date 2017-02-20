@@ -89,7 +89,7 @@
 
     <footer class="form-footer">
       <button type="submit" name="submitMessage">
-        {l s='Send' d='Modules.Contactform.Shop' d='Modules.Contactform.Shop'}
+        {l s='Send' d='Modules.Contactform.Shop'}
       </button>
     </footer>
 
