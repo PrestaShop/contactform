@@ -24,15 +24,15 @@
 *}
 
 {block name="page_title"}
-  {l s='Customer service - Contact us'}
+  {l s='Customer service - Contact us' d='Modules.Contactform.Shop'}
 {/block}
 
 <section class="login-form">
   <form action="{$urls.pages.contact}" method="post" {if $contact.allow_file_upload}enctype="multipart/form-data"{/if}>
 
     <header>
-      <h1 class="h3">{l s='Send a message'}</h1>
-      <p>{l s='If you would like to add a comment about your order, please write it in the field below.'}</p>
+      <h1 class="h3">{l s='Send a message' d='Modules.Contactform.Shop'}</h1>
+      <p>{l s='If you would like to add a comment about your order, please write it in the field below.' d='Modules.Contactform.Shop'}</p>
     </header>
 
     {if $notifications}
@@ -48,7 +48,7 @@
     <section class="form-fields">
 
       <label>
-        <span>{l s='Subject Heading'}</span>
+        <span>{l s='Subject Heading' d='Modules.Contactform.Shop'}</span>
         <select name="id_contact">
           {foreach from=$contact.contacts item=contact_elt}
             <option value="{$contact_elt.id_contact}">{$contact_elt.name}</option>
@@ -57,15 +57,15 @@
       </label>
 
       <label>
-        <span>{l s='Email address'}</span>
+        <span>{l s='Email address' d='Modules.Contactform.Shop'}</span>
         <input type="email" name="from" value="{$contact.email}" />
       </label>
 
       {if $contact.orders}
         <label>
-          <span>{l s='Order reference'}</span>
+          <span>{l s='Order reference' d='Modules.Contactform.Shop'}</span>
           <select name="id_order">
-            <option value="">{l s='Select reference'}</option>
+            <option value="">{l s='Select reference' d='Modules.Contactform.Shop'}</option>
             {foreach from=$contact.orders item=order}
               <option value="{$order.id_order}">{$order.reference}</option>
             {/foreach}
@@ -75,13 +75,13 @@
 
       {if $contact.allow_file_upload}
         <label>
-          <span>{l s='Attach File'}</span>
+          <span>{l s='Attach File' d='Modules.Contactform.Shop'}</span>
           <input type="file" name="fileUpload" />
         </label>
       {/if}
 
       <label>
-        <span>{l s='Message'}</span>
+        <span>{l s='Message' d='Modules.Contactform.Shop'}</span>
         <textarea cols="67" rows="3" name="message">{if $contact.message}{$contact.message}{/if}</textarea>
       </label>
 
@@ -89,7 +89,7 @@
 
     <footer class="form-footer">
       <button type="submit" name="submitMessage">
-        {l s='Send'}
+        {l s='Send' d='Modules.Contactform.Shop'}
       </button>
     </footer>
 
