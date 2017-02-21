@@ -232,13 +232,13 @@ class Contactform extends Module implements WidgetInterface
                         $cm->ip_address = (int)ip2long(Tools::getRemoteAddr());
                         $cm->user_agent = $_SERVER['HTTP_USER_AGENT'];
                         if (!$cm->add()) {
-                            $this->context->controller->errors[] = $this->l('An error occurred while sending the message.');
+                            $this->context->controller->errors[] = $this->trans('An error occurred while sending the message.', array(), 'Modules.Contactform.Shop');
                         }
                     } else {
                         $mailAlreadySend = true;
                     }
                 } else {
-                    $this->context->controller->errors[] = $this->l('An error occurred while sending the message.');
+                    $this->context->controller->errors[] = $this->trans('An error occurred while sending the message.', array(), 'Modules.Contactform.Shop');
                 }
             }
 
