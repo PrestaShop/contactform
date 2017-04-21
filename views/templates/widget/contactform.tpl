@@ -28,7 +28,7 @@
 {/block}
 
 <section class="login-form">
-  <form action="{$urls.pages.contact}" method="post" {if $contact.allow_file_upload}enctype="multipart/form-data"{/if}>
+  <form id="contact-form" action="{$urls.pages.contact}" method="post" {if $contact.allow_file_upload}enctype="multipart/form-data"{/if}>
 
     <header>
       <h1 class="h3">{l s='Send a message' d='Modules.Contactform.Shop'}</h1>
