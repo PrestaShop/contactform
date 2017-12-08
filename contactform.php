@@ -166,7 +166,7 @@ class Contactform extends Module implements WidgetInterface
 
         if (!($from = trim(Tools::getValue('from'))) || !Validate::isEmail($from)) {
             $this->context->controller->errors[] = $this->trans('Invalid email address.', array(), 'Shop.Notifications.Error');
-        } elseif (!$message) {
+        } elseif (preg_match('#^[ ]*$#', $message)) {
             $this->context->controller->errors[] = $this->trans('The message cannot be blank.', array(), 'Shop.Notifications.Error');
         } elseif (!Validate::isCleanHtml($message)) {
             $this->context->controller->errors[] = $this->trans('Invalid message', array(), 'Shop.Notifications.Error');

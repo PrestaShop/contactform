@@ -45,54 +45,55 @@
       </div>
     {/if}
 
-    <section class="form-fields">
+    {if !$notifications || $notifications.nw_error}
+      <section class="form-fields">
 
-      <label>
-        <span>{l s='Subject Heading' d='Modules.Contactform.Shop'}</span>
-        <select name="id_contact">
-          {foreach from=$contact.contacts item=contact_elt}
-            <option value="{$contact_elt.id_contact}">{$contact_elt.name}</option>
-          {/foreach}
-        </select>
-      </label>
-
-      <label>
-        <span>{l s='Email address' d='Modules.Contactform.Shop'}</span>
-        <input type="email" name="from" value="{$contact.email}" />
-      </label>
-
-      {if $contact.orders}
         <label>
-          <span>{l s='Order reference' d='Modules.Contactform.Shop'}</span>
-          <select name="id_order">
-            <option value="">{l s='Select reference' d='Modules.Contactform.Shop'}</option>
-            {foreach from=$contact.orders item=order}
-              <option value="{$order.id_order}">{$order.reference}</option>
+          <span>{l s='Subject Heading' d='Modules.Contactform.Shop'}</span>
+          <select name="id_contact">
+            {foreach from=$contact.contacts item=contact_elt}
+              <option value="{$contact_elt.id_contact}">{$contact_elt.name}</option>
             {/foreach}
           </select>
         </label>
-      {/if}
 
-      {if $contact.allow_file_upload}
         <label>
-          <span>{l s='Attach File' d='Modules.Contactform.Shop'}</span>
-          <input type="file" name="fileUpload" />
+          <span>{l s='Email address' d='Modules.Contactform.Shop'}</span>
+          <input type="email" name="from" value="{$contact.email}" />
         </label>
-      {/if}
 
-      <label>
-        <span>{l s='Message' d='Modules.Contactform.Shop'}</span>
-        <textarea cols="67" rows="3" name="message">{if $contact.message}{$contact.message}{/if}</textarea>
-      </label>
+        {if $contact.orders}
+          <label>
+            <span>{l s='Order reference' d='Modules.Contactform.Shop'}</span>
+            <select name="id_order">
+              <option value="">{l s='Select reference' d='Modules.Contactform.Shop'}</option>
+              {foreach from=$contact.orders item=order}
+                <option value="{$order.id_order}">{$order.reference}</option>
+              {/foreach}
+            </select>
+          </label>
+        {/if}
 
-    </section>
+        {if $contact.allow_file_upload}
+          <label>
+            <span>{l s='Attach File' d='Modules.Contactform.Shop'}</span>
+            <input type="file" name="fileUpload" />
+          </label>
+        {/if}
 
-    <footer class="form-footer">
-      <button type="submit" name="submitMessage">
-        {l s='Send' d='Modules.Contactform.Shop'}
-      </button>
-    </footer>
+        <label>
+          <span>{l s='Message' d='Modules.Contactform.Shop'}</span>
+          <textarea cols="67" rows="3" name="message">{if $contact.message}{$contact.message}{/if}</textarea>
+        </label>
 
+      </section>
+
+      <footer class="form-footer">
+        <button type="submit" name="submitMessage">
+          {l s='Send' d='Modules.Contactform.Shop'}
+        </button>
+      </footer>
+    {/if}
   </form>
 </section>
 
