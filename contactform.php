@@ -270,19 +270,7 @@ class Contactform extends Module implements WidgetInterface
                     }
                 }
 
-                if (empty($contact->email)) {
-                    Mail::Send(
-                        $this->context->language->id,
-                        'contact_form',
-                        ((isset($ct) && Validate::isLoadedObject($ct)) ? $this->trans('Your message has been correctly sent #ct%thread_id% #tc%thread_token%', array('%thread_id%' => $ct->id, '%thread_token%' => $ct->token), 'Emails.Subject') : $this->trans('Your message has been correctly sent', array(), 'Emails.Subject')),
-                        $var_list,
-                        $from,
-                        null,
-                        null,
-                        null,
-                        $file_attachment
-                    );
-                } else {
+                if (!empty($contact->email)) {
                     if (!Mail::Send(
                         $this->context->language->id,
                         'contact',
@@ -299,22 +287,6 @@ class Contactform extends Module implements WidgetInterface
                         null,
                         null,
                         $from
-                    ) || !Mail::Send(
-                        $this->context->language->id,
-                        'contact_form',
-                        ((isset($ct) && Validate::isLoadedObject($ct)) ? $this->trans('Your message has been correctly sent #ct%thread_id% #tc%thread_token%', array('%thread_id%' => $ct->id, '%thread_token%' => $ct->token), 'Emails.Subject') : $this->trans('Your message has been correctly sent', array(), 'Emails.Subject')),
-                        $var_list,
-                        $from,
-                        null,
-                        null,
-                        null,
-                        $file_attachment,
-                        null,
-                        _PS_MAIL_DIR_,
-                        false,
-                        null,
-                        null,
-                        $contact->email
                     )) {
                         $this->context->controller->errors[] = $this->trans('An error occurred while sending the message.', array(), 'Modules.Contactform.Shop');
                     }
