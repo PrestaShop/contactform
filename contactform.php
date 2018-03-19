@@ -57,6 +57,9 @@ class Contactform extends Module implements WidgetInterface
 
     public function renderWidget($hookName = null, array $configuration = [])
     {
+        if (!$this->active) {
+            return;
+        }
         $this->smarty->assign($this->getWidgetVariables($hookName, $configuration));
         return $this->display(__FILE__, 'views/templates/widget/contactform.tpl');
     }
