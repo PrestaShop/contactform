@@ -89,6 +89,13 @@
       </section>
 
       <footer class="form-footer">
+        <style>
+          input[name=url] {
+            display: none !important;
+          }
+        </style>
+        <input type="text" name="url" value=""/>
+        <input type="hidden" name="token" value="{$token}" />
         <button type="submit" name="submitMessage">
           {l s='Send' d='Modules.Contactform.Shop'}
         </button>
@@ -96,5 +103,3 @@
     {/if}
   </form>
 </section>
-
-
