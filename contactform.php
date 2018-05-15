@@ -70,7 +70,7 @@ class Contactform extends Module implements WidgetInterface
      */
     public function install()
     {
-        return parent::install();
+        return parent::install() && $this->registerHook('registerGDPRConsent');
     }
 
     /**
@@ -309,7 +309,8 @@ class Contactform extends Module implements WidgetInterface
         return [
             'contact' => $this->contact,
             'notifications' => $notifications,
-            'token' => $this->context->cookie->contactFormToken
+            'token' => $this->context->cookie->contactFormToken,
+            'id_module' => $this->id
         ];
     }
 
