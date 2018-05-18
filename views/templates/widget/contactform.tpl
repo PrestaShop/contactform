@@ -86,7 +86,7 @@
           <textarea cols="67" rows="3" name="message">{if $contact.message}{$contact.message}{/if}</textarea>
         </label>
         
-        {hook h='displayGDPRConsent' mod='psgdpr' id_module=$id_module}
+        {hook h='displayGDPRConsent' id_module=$id_module}
 
       </section>
 
