@@ -120,25 +120,23 @@ class Contactform extends Module implements WidgetInterface
             'PT' => 'seguranca-acesso',
             'RU' => 'website-security-access',
         ];
-        foreach ($codes as $lang => $path) {
-            $urlsByLanguagesCodes[$lang] = sprtinf(
+
+        $languageCode = strtoupper($this->context->language->language_code);
+        if (empty($codes[$languageCode])) {
+            $languageCode = 'EN';
+        }
+
+        return sprintf(
+            '<a href="%1$s">%2$s</a>',
+            sprintf(
                 'https://addons.prestashop.com/%s/429-%s?utm_source=back-office&' .
                 'utm_medium=native-contactform&utm_campaign=back-office-%s&utm_content=security',
-                strtolower($lang),
-                $lang,
-                $path
-            );
-        }
-
-        $link = $urlsByLanguagesCodes['EN'];
-        $languageCode = strtoupper($this->context->language->language_code);
-
-        if (!empty($urlsByLanguagesCodes[$languageCode])) {
-            $link = $urlsByLanguagesCodes[$languageCode];
-        }
-        $linkText = $this->trans('PrestaShop Addons Marketplace', [], 'Admin.Modules.Feature');
-
-        return sprintf('<a href="%1$s">%2$s</a>', $link, $linkText);
+                strtolower($languageCode),
+                $codes[$languageCode],
+                $languageCode
+            ),
+            $this->trans('PrestaShop Addons Marketplace', [], 'Admin.Modules.Feature')
+        );
     }
 
     /**
@@ -495,7 +493,18 @@ class Contactform extends Module implements WidgetInterface
                 $customer->getByEmail($from);
             }
 
-            $id_order = (int)Tools::getValue('id_order');
+            /**
+             * Check if customer is connected and he select his
+             * order.
+             */
+            $id_order = (int) Tools::getValue('id_order');
+            if (empty($id_order) || !$this->context->customer->isLogged()) {
+                $id_order = 0;
+            } else {
+                $order = new Order($id_order);
+                $id_order = (int) $order->id_customer === $customer->id ? $id_order : 0;
+            }
+
             $id_customer_thread = CustomerThread::getIdCustomerThreadByEmailAndIdOrder($from, $id_order);
 
             if ($contact->customer_service) {
@@ -504,7 +513,7 @@ class Contactform extends Module implements WidgetInterface
                     $ct->status = 'open';
                     $ct->id_lang = (int)$this->context->language->id;
                     $ct->id_contact = (int)$id_contact;
-                    $ct->id_order = (int)$id_order;
+                    $ct->id_order = $id_order;
 
                     if ($id_product = (int)Tools::getValue('id_product')) {
                         $ct->id_product = $id_product;
@@ -516,7 +525,7 @@ class Contactform extends Module implements WidgetInterface
                         $ct->id_customer = (int)$customer->id;
                     }
                     $ct->id_shop = (int)$this->context->shop->id;
-                    $ct->id_order = (int)$id_order;
+                    $ct->id_order = $id_order;
 
                     if ($id_product = (int)Tools::getValue('id_product')) {
                         $ct->id_product = $id_product;
