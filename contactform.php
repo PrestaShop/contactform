@@ -55,7 +55,7 @@ class Contactform extends Module implements WidgetInterface
         $this->name = 'contactform';
         $this->author = 'PrestaShop';
         $this->tab = 'front_office_features';
-        $this->version = '4.0.0';
+        $this->version = '4.1.0';
         $this->bootstrap = true;
 
         parent::__construct();
@@ -70,7 +70,7 @@ class Contactform extends Module implements WidgetInterface
      */
     public function install()
     {
-        return parent::install();
+        return parent::install() && $this->registerHook('registerGDPRConsent');
     }
 
     /**
@@ -309,7 +309,8 @@ class Contactform extends Module implements WidgetInterface
         return [
             'contact' => $this->contact,
             'notifications' => $notifications,
-            'token' => $this->context->cookie->contactFormToken
+            'token' => $this->context->cookie->contactFormToken,
+            'id_module' => $this->id
         ];
     }
 

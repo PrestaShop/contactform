@@ -85,6 +85,8 @@
           <span>{l s='Message' d='Modules.Contactform.Shop'}</span>
           <textarea cols="67" rows="3" name="message">{if $contact.message}{$contact.message}{/if}</textarea>
         </label>
+        
+        {hook h='displayGDPRConsent' id_module=$id_module}
 
       </section>
 
