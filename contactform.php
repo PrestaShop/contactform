@@ -494,13 +494,10 @@ class Contactform extends Module implements WidgetInterface
             }
 
             /**
-             * Check if customer is connected and he select his
-             * order.
+             * Check if customer select his order.
              */
             $id_order = (int) Tools::getValue('id_order');
-            if (empty($id_order) || !$this->context->customer->isLogged()) {
-                $id_order = 0;
-            } else {
+            if (!empty($id_order)) {
                 $order = new Order($id_order);
                 $id_order = (int) $order->id_customer === $customer->id ? $id_order : 0;
             }
