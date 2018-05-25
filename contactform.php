@@ -499,7 +499,7 @@ class Contactform extends Module implements WidgetInterface
             $id_order = (int) Tools::getValue('id_order');
             if (!empty($id_order)) {
                 $order = new Order($id_order);
-                $id_order = (int) $order->id_customer === $customer->id ? $id_order : 0;
+                $id_order = (int) $order->id_customer === (int) $customer->id ? $id_order : 0;
             }
 
             $id_customer_thread = CustomerThread::getIdCustomerThreadByEmailAndIdOrder($from, $id_order);
