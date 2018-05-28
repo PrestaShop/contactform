@@ -494,7 +494,7 @@ class Contactform extends Module implements WidgetInterface
             }
 
             /**
-             * Check if customer select his order.
+             * Check that the order belongs to the customer.
              */
             $id_order = (int) Tools::getValue('id_order');
             if (!empty($id_order)) {
