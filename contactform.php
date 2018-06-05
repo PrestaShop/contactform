@@ -60,8 +60,12 @@ class Contactform extends Module implements WidgetInterface
 
         parent::__construct();
 
-        $this->displayName = $this->trans('Contact form', array(), 'Modules.Contactform.Admin');
-        $this->description = $this->trans('Adds a contact form to the "Contact us" page.', array(), 'Modules.Contactform.Admin');
+        $this->displayName = $this->trans('Contact form', [], 'Modules.Contactform.Admin');
+        $this->description = $this->trans(
+            'Adds a contact form to the "Contact us" page.',
+            [],
+            'Modules.Contactform.Admin'
+        );
         $this->ps_versions_compliancy = array('min' => '1.7.2.0', 'max' => _PS_VERSION_);
     }
 
@@ -105,26 +109,34 @@ class Contactform extends Module implements WidgetInterface
      */
     public function getSecurityMarketPlaceLink()
     {
-        $urlsByLanguagesCodes = array(
-            'FR' => 'https://addons.prestashop.com/fr/429-securite-access?utm_source=back-office&utm_medium=native-contactform&utm_campaign=back-office-FR&utm_content=security',
-            'EN' => 'https://addons.prestashop.com/en/429-website-security-access?utm_source=back-office&utm_medium=native-contactform&utm_campaign=back-office-EN&utm_content=security',
-            'ES' => 'https://addons.prestashop.com/es/429-seguridad-y-accesos?utm_source=back-office&utm_medium=native-contactform&utm_campaign=back-office-ES&utm_content=security',
-            'DE' => 'https://addons.prestashop.com/de/429-sicherheit-brechtigungen?utm_source=back-office&utm_medium=native-contactform&utm_campaign=back-office-DE&utm_content=security',
-            'IT' => 'https://addons.prestashop.com/it/429-security-access?utm_source=back-office&utm_medium=native-contactform&utm_campaign=back-office-IT&utm_content=security',
-            'NL' => 'https://addons.prestashop.com/nl/429-veiligheid-toegang?utm_source=back-office&utm_medium=native-contactform&utm_campaign=back-office-NL&utm_content=security',
-            'PL' => 'https://addons.prestashop.com/pl/429-bezpieczestwa-dostepu?utm_source=back-office&utm_medium=native-contactform&utm_campaign=back-office-PL&utm_content=security',
-            'PT' => 'https://addons.prestashop.com/pt/429-seguranca-acesso?utm_source=back-office&utm_medium=native-contactform&utm_campaign=back-office-PT&utm_content=security',
-            'RU' => 'https://addons.prestashop.com/ru/429-website-security-access?utm_source=back-office&utm_medium=native-contactform&utm_campaign=back-office-RU&utm_content=security',
-        );
-        $link = $urlsByLanguagesCodes['EN'];
+        $codes = [
+            'FR' => 'securite-access',
+            'EN' => 'website-security-access',
+            'ES' => 'seguridad-y-accesos',
+            'DE' => 'sicherheit-brechtigungen',
+            'IT' => 'security-access',
+            'NL' => 'veiligheid-toegang',
+            'PL' => 'bezpieczestwa-dostepu',
+            'PT' => 'seguranca-acesso',
+            'RU' => 'website-security-access',
+        ];
+
         $languageCode = strtoupper($this->context->language->language_code);
-
-        if (!empty($urlsByLanguagesCodes[$languageCode])) {
-            $link = $urlsByLanguagesCodes[$languageCode];
+        if (empty($codes[$languageCode])) {
+            $languageCode = 'EN';
         }
-        $linkText = $this->trans('PrestaShop Addons Marketplace', array(), 'Admin.Modules.Feature');
 
-        return sprintf('<a href="%1$s">%2$s</a>', $link, $linkText);
+        return sprintf(
+            '<a href="%1$s">%2$s</a>',
+            sprintf(
+                'https://addons.prestashop.com/%s/429-%s?utm_source=back-office&' .
+                'utm_medium=native-contactform&utm_campaign=back-office-%s&utm_content=security',
+                strtolower($languageCode),
+                $codes[$languageCode],
+                $languageCode
+            ),
+            $this->trans('PrestaShop Addons Marketplace', [], 'Admin.Modules.Feature')
+        );
     }
 
     /**
@@ -145,14 +157,22 @@ class Contactform extends Module implements WidgetInterface
         $form = array(
             'form' => array(
                 'legend' => array(
-                    'title' => $this->trans('Parameters', array(), 'Modules.Contactform.Admin'),
+                    'title' => $this->trans('Parameters', [], 'Modules.Contactform.Admin'),
                     'icon' => 'icon-envelope'
                 ),
                 'input' => array(
                     array(
                         'type' => 'switch',
-                        'label' => $this->trans('Send confirmation email to your customers', array(), 'Modules.Contactform.Admin'),
-                        'desc' => $this->trans("Choose Yes and your customers will receive a generic confirmation email including a tracking number after their message is sent. Note: to discourage spam, the content of their message won't be included in the email.", array(), 'Modules.Contactform.Admin'),
+                        'label' => $this->trans(
+                            'Send confirmation email to your customers',
+                            [],
+                            'Modules.Contactform.Admin'
+                        ),
+                        'desc' => $this->trans(
+                            "Choose Yes and your customers will receive a generic confirmation email including a tracking number after their message is sent. Note: to discourage spam, the content of their message won't be included in the email.",
+                            [],
+                            'Modules.Contactform.Admin'
+                        ),
                         'name' => self::SEND_CONFIRMATION_EMAIL,
                         'is_bool' => true,
                         'required' => true,
@@ -160,19 +180,27 @@ class Contactform extends Module implements WidgetInterface
                             array(
                                 'id' => self::SEND_CONFIRMATION_EMAIL . '_on',
                                 'value' => 1,
-                                'label' => $this->trans('Enabled', array(), 'Admin.Global')
+                                'label' => $this->trans('Enabled', [], 'Admin.Global')
                             ),
                             array(
                                 'id' => self::SEND_CONFIRMATION_EMAIL . '_off',
                                 'value' => 0,
-                                'label' => $this->trans('Disabled', array(), 'Admin.Global')
+                                'label' => $this->trans('Disabled', [], 'Admin.Global')
                             )
                         )
                     ),
                     array(
                         'type' => 'switch',
-                        'label' => $this->trans("Receive customers' messages by email", array(), 'Modules.Contactform.Admin'),
-                        'desc' => $this->trans('By default, you will only receive contact messages through your Customer service tab.', array(), 'Modules.Contactform.Admin'),
+                        'label' => $this->trans(
+                            "Receive customers' messages by email",
+                            [],
+                            'Modules.Contactform.Admin'
+                        ),
+                        'desc' => $this->trans(
+                            'By default, you will only receive contact messages through your Customer service tab.',
+                            [],
+                            'Modules.Contactform.Admin'
+                        ),
                         'name' => self::SEND_NOTIFICATION_EMAIL,
                         'is_bool' => true,
                         'required' => true,
@@ -180,19 +208,19 @@ class Contactform extends Module implements WidgetInterface
                             array(
                                 'id' => self::SEND_NOTIFICATION_EMAIL . '_on',
                                 'value' => 1,
-                                'label' => $this->trans('Enabled', array(), 'Admin.Global')
+                                'label' => $this->trans('Enabled', [], 'Admin.Global')
                             ),
                             array(
                                 'id' => self::SEND_NOTIFICATION_EMAIL . '_off',
                                 'value' => 0,
-                                'label' => $this->trans('Disabled', array(), 'Admin.Global')
+                                'label' => $this->trans('Disabled', [], 'Admin.Global')
                             )
                         )
                     )
                 ),
                 'submit' => array(
                     'name' => self::SUBMIT_NAME,
-                    'title' => $this->trans('Save', array(), 'Admin.Actions'),
+                    'title' => $this->trans('Save', [], 'Admin.Actions'),
                 )
             ),
         );
@@ -269,7 +297,7 @@ class Contactform extends Module implements WidgetInterface
                 $notifications['messages'] = $this->context->controller->success;
                 $notifications['nw_error'] = false;
             }
-        } else if (empty($this->context->cookie->contactFormToken)
+        } elseif (empty($this->context->cookie->contactFormToken)
             || empty($this->context->cookie->contactFormTokenTTL)
             || $this->context->cookie->contactFormTokenTTL < time()
         ) {
@@ -297,13 +325,20 @@ class Contactform extends Module implements WidgetInterface
         if (!(bool)Configuration::isCatalogMode()) {
             $this->contact['orders'] = $this->getTemplateVarOrders();
         } else {
-            $this->contact['orders'] = array();
+            $this->contact['orders'] = [];
         }
 
         if ($this->customer_thread['email']) {
             $this->contact['email'] = $this->customer_thread['email'];
         } else {
-            $this->contact['email'] = Tools::safeOutput(Tools::getValue('from', ((isset($this->context->cookie) && isset($this->context->cookie->email) && Validate::isEmail($this->context->cookie->email)) ? $this->context->cookie->email : '')));
+            $this->contact['email'] = Tools::safeOutput(
+                Tools::getValue(
+                    'from',
+                    !empty($this->context->cookie->email) && Validate::isEmail($this->context->cookie->email) ?
+                    $this->context->cookie->email :
+                    ''
+                )
+            );
         }
 
         return [
@@ -330,7 +365,7 @@ class Contactform extends Module implements WidgetInterface
      */
     public function getTemplateVarContact()
     {
-        $contacts = array();
+        $contacts = [];
         $all_contacts = Contact::getContacts($this->context->language->id);
 
         foreach ($all_contacts as $one_contact_id => $one_contact) {
@@ -350,7 +385,7 @@ class Contactform extends Module implements WidgetInterface
      */
     public function getTemplateVarOrders()
     {
-        $orders = array();
+        $orders = [];
 
         if (!isset($this->customer_thread['id_order']) && $this->context->customer->isLogged()) {
             $customer_orders = Order::getCustomerOrders($this->context->customer->id);
@@ -374,12 +409,13 @@ class Contactform extends Module implements WidgetInterface
         }
 
         if ($this->customer_thread['id_product']) {
-            $id_order = 0;
+            $id_order = isset($this->customer_thread['id_order']) ?
+                      (int)$this->customer_thread['id_order'] :
+                      0;
 
-            if (isset($this->customer_thread['id_order'])) {
-                $id_order = (int)$this->customer_thread['id_order'];
-            }
-            $orders[$id_order]['products'][(int)$this->customer_thread['id_product']] = $this->context->controller->objectPresenter->present(new Product((int)$this->customer_thread['id_product']));
+            $orders[$id_order]['products'][(int)$this->customer_thread['id_product']] = $this->context->controller->objectPresenter->present(
+                new Product((int)$this->customer_thread['id_product'])
+            );
         }
 
         return $orders;
@@ -400,23 +436,56 @@ class Contactform extends Module implements WidgetInterface
         $clientTokenTTL = $this->context->cookie->contactFormTokenTTL;
 
         if (!($from = trim(Tools::getValue('from'))) || !Validate::isEmail($from)) {
-            $this->context->controller->errors[] = $this->trans('Invalid email address.', array(), 'Shop.Notifications.Error');
+            $this->context->controller->errors[] = $this->trans(
+                'Invalid email address.',
+                [],
+                'Shop.Notifications.Error'
+            );
         } elseif (empty($message)) {
-            $this->context->controller->errors[] = $this->trans('The message cannot be blank.', array(), 'Shop.Notifications.Error');
+            $this->context->controller->errors[] = $this->trans(
+                'The message cannot be blank.',
+                [],
+                'Shop.Notifications.Error'
+            );
         } elseif (!Validate::isCleanHtml($message)) {
-            $this->context->controller->errors[] = $this->trans('Invalid message', array(), 'Shop.Notifications.Error');
-        } elseif (!($id_contact = (int)Tools::getValue('id_contact')) || !(Validate::isLoadedObject($contact = new Contact($id_contact, $this->context->language->id)))) {
-            $this->context->controller->errors[] = $this->trans('Please select a subject from the list provided. ', array(), 'Modules.Contactform.Shop');
+            $this->context->controller->errors[] = $this->trans(
+                'Invalid message',
+                [],
+                'Shop.Notifications.Error'
+            );
+        } elseif (!($id_contact = (int)Tools::getValue('id_contact')) ||
+                  !(Validate::isLoadedObject($contact = new Contact($id_contact, $this->context->language->id)))
+        ) {
+            $this->context->controller->errors[] = $this->trans(
+                'Please select a subject from the list provided. ',
+                [],
+                'Modules.Contactform.Shop'
+            );
         } elseif (!empty($file_attachment['name']) && $file_attachment['error'] != 0) {
-            $this->context->controller->errors[] = $this->trans('An error occurred during the file-upload process.', array(), 'Modules.Contactform.Shop');
-        } elseif (!empty($file_attachment['name']) && !in_array(Tools::strtolower(substr($file_attachment['name'], -4)), $extension) && !in_array(Tools::strtolower(substr($file_attachment['name'], -5)), $extension)) {
-            $this->context->controller->errors[] = $this->trans('Bad file extension', array(), 'Modules.Contactform.Shop');
+            $this->context->controller->errors[] = $this->trans(
+                'An error occurred during the file-upload process.',
+                [],
+                'Modules.Contactform.Shop'
+            );
+        } elseif (!empty($file_attachment['name']) &&
+                  !in_array(Tools::strtolower(substr($file_attachment['name'], -4)), $extension) &&
+                  !in_array(Tools::strtolower(substr($file_attachment['name'], -5)), $extension)
+        ) {
+            $this->context->controller->errors[] = $this->trans(
+                'Bad file extension',
+                [],
+                'Modules.Contactform.Shop'
+            );
         } elseif ($url !== ''
             || empty($serverToken)
             || $clientToken !== $serverToken
             || $clientTokenTTL < time()
         ) {
-            $this->context->controller->errors[] = $this->trans('An error occurred while sending the message, please try again.', array(), 'Modules.Contactform.Shop');
+            $this->context->controller->errors[] = $this->trans(
+                'An error occurred while sending the message, please try again.',
+                [],
+                'Modules.Contactform.Shop'
+            );
             $this->createNewToken();
         } else {
             $customer = $this->context->customer;
@@ -424,7 +493,16 @@ class Contactform extends Module implements WidgetInterface
             if (!$customer->id) {
                 $customer->getByEmail($from);
             }
-            $id_order = (int)Tools::getValue('id_order');
+
+            /**
+             * Check that the order belongs to the customer.
+             */
+            $id_order = (int) Tools::getValue('id_order');
+            if (!empty($id_order)) {
+                $order = new Order($id_order);
+                $id_order = (int) $order->id_customer === (int) $customer->id ? $id_order : 0;
+            }
+
             $id_customer_thread = CustomerThread::getIdCustomerThreadByEmailAndIdOrder($from, $id_order);
 
             if ($contact->customer_service) {
@@ -433,7 +511,7 @@ class Contactform extends Module implements WidgetInterface
                     $ct->status = 'open';
                     $ct->id_lang = (int)$this->context->language->id;
                     $ct->id_contact = (int)$id_contact;
-                    $ct->id_order = (int)$id_order;
+                    $ct->id_order = $id_order;
 
                     if ($id_product = (int)Tools::getValue('id_product')) {
                         $ct->id_product = $id_product;
@@ -445,7 +523,7 @@ class Contactform extends Module implements WidgetInterface
                         $ct->id_customer = (int)$customer->id;
                     }
                     $ct->id_shop = (int)$this->context->shop->id;
-                    $ct->id_order = (int)$id_order;
+                    $ct->id_order = $id_order;
 
                     if ($id_product = (int)Tools::getValue('id_product')) {
                         $ct->id_product = $id_product;
@@ -476,13 +554,21 @@ class Contactform extends Module implements WidgetInterface
                         $cm->user_agent = $_SERVER['HTTP_USER_AGENT'];
 
                         if (!$cm->add()) {
-                            $this->context->controller->errors[] = $this->trans('An error occurred while sending the message.', array(), 'Modules.Contactform.Shop');
+                            $this->context->controller->errors[] = $this->trans(
+                                'An error occurred while sending the message.',
+                                [],
+                                'Modules.Contactform.Shop'
+                            );
                         }
                     } else {
                         $mailAlreadySend = true;
                     }
                 } else {
-                    $this->context->controller->errors[] = $this->trans('An error occurred while sending the message.', array(), 'Modules.Contactform.Shop');
+                    $this->context->controller->errors[] = $this->trans(
+                        'An error occurred while sending the message.',
+                        [],
+                        'Modules.Contactform.Shop'
+                    );
                 }
             }
             $sendConfirmationEmail = Configuration::get(self::SEND_CONFIRMATION_EMAIL);
@@ -514,7 +600,9 @@ class Contactform extends Module implements WidgetInterface
                 if ($id_product) {
                     $product = new Product((int)$id_product);
 
-                    if (Validate::isLoadedObject($product) && isset($product->name[Context::getContext()->language->id])) {
+                    if (Validate::isLoadedObject($product) &&
+                        isset($product->name[Context::getContext()->language->id])
+                    ) {
                         $var_list['{product_name}'] = $product->name[Context::getContext()->language->id];
                     }
                 }
@@ -523,7 +611,7 @@ class Contactform extends Module implements WidgetInterface
                     if (empty($contact->email) || !Mail::Send(
                         $this->context->language->id,
                         'contact',
-                        $this->trans('Message from contact form', array(), 'Emails.Subject').' [no_sync]',
+                        $this->trans('Message from contact form', [], 'Emails.Subject').' [no_sync]',
                         $var_list,
                         $contact->email,
                         $contact->name,
@@ -539,7 +627,7 @@ class Contactform extends Module implements WidgetInterface
                     )) {
                         $this->context->controller->errors[] = $this->trans(
                             'An error occurred while sending the message.',
-                            array(),
+                            [],
                             'Modules.Contactform.Shop'
                         );
                     }
@@ -551,7 +639,14 @@ class Contactform extends Module implements WidgetInterface
                     if (!Mail::Send(
                         $this->context->language->id,
                         'contact_form',
-                        ((isset($ct) && Validate::isLoadedObject($ct)) ? $this->trans('Your message has been correctly sent #ct%thread_id% #tc%thread_token%', array('%thread_id%' => $ct->id, '%thread_token%' => $ct->token), 'Emails.Subject') : $this->trans('Your message has been correctly sent', array(), 'Emails.Subject')),
+                        ((isset($ct) && Validate::isLoadedObject($ct)) ? $this->trans(
+                            'Your message has been correctly sent #ct%thread_id% #tc%thread_token%',
+                            [
+                                '%thread_id%' => $ct->id,
+                                '%thread_token%' => $ct->token
+                            ],
+                            'Emails.Subject'
+                        ) : $this->trans('Your message has been correctly sent', [], 'Emails.Subject')),
                         $var_list,
                         $from,
                         null,
@@ -567,7 +662,7 @@ class Contactform extends Module implements WidgetInterface
                     )) {
                         $this->context->controller->errors[] = $this->trans(
                             'An error occurred while sending the message.',
-                            array(),
+                            [],
                             'Modules.Contactform.Shop'
                         );
                     }
@@ -577,7 +672,7 @@ class Contactform extends Module implements WidgetInterface
             if (!count($this->context->controller->errors)) {
                 $this->context->controller->success[] = $this->trans(
                     'Your message has been successfully sent to our team.',
-                    array(),
+                    [],
                     'Modules.Contactform.Shop'
                 );
             }
