@@ -309,11 +309,6 @@ class Contactform extends Module implements WidgetInterface
 
             if ($cm->token == $token) {
                 $this->customer_thread = $this->context->controller->objectPresenter->present($cm);
-                $order = new Order((int)$this->customer_thread['id_order']);
-
-                if (Validate::isLoadedObject($order)) {
-                    $customer_thread['reference'] = $order->getUniqReference();
-                }
             }
         }
         $this->contact['contacts'] = $this->getTemplateVarContact();
@@ -366,7 +361,7 @@ class Contactform extends Module implements WidgetInterface
         $contacts = array();
         $all_contacts = Contact::getContacts($this->context->language->id);
 
-        foreach ($all_contacts as $one_contact_id => $one_contact) {
+        foreach ($all_contacts as $one_contact) {
             $contacts[$one_contact['id_contact']] = $one_contact;
         }
 
