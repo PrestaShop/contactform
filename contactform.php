@@ -121,7 +121,7 @@ class Contactform extends Module implements WidgetInterface
             'RU' => 'website-security-access',
         ];
 
-        $languageCode = strtoupper($this->context->language->language_code);
+        $languageCode = Tools::strtoupper($this->context->language->language_code);
         if (empty($codes[$languageCode])) {
             $languageCode = 'EN';
         }
@@ -131,7 +131,7 @@ class Contactform extends Module implements WidgetInterface
             sprintf(
                 'https://addons.prestashop.com/%s/429-%s?utm_source=back-office&' .
                 'utm_medium=native-contactform&utm_campaign=back-office-%s&utm_content=security',
-                strtolower($languageCode),
+                Tools::strtolower($languageCode),
                 $codes[$languageCode],
                 $languageCode
             ),
@@ -468,8 +468,8 @@ class Contactform extends Module implements WidgetInterface
                 'Modules.Contactform.Shop'
             );
         } elseif (!empty($file_attachment['name']) &&
-                  !in_array(Tools::strtolower(substr($file_attachment['name'], -4)), $extension) &&
-                  !in_array(Tools::strtolower(substr($file_attachment['name'], -5)), $extension)
+                  !in_array(Tools::strtolower(Tools::substr($file_attachment['name'], -4)), $extension) &&
+                  !in_array(Tools::strtolower(Tools::substr($file_attachment['name'], -5)), $extension)
         ) {
             $this->context->controller->errors[] = $this->trans(
                 'Bad file extension',
@@ -581,7 +581,7 @@ class Contactform extends Module implements WidgetInterface
                 $var_list = [
                     '{order_name}' => '-',
                     '{attached_file}' => '-',
-                    '{message}' => Tools::nl2br(stripslashes($message)),
+                    '{message}' => Tools::nl2br(Tools::stripslashes($message)),
                     '{email}' =>  $from,
                     '{product_name}' => '',
                 ];
