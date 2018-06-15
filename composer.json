@@ -10,7 +10,8 @@
     }
   ],
   "require": {
-    "php": ">=5.4.0"
+    "php": ">=5.4.0",
+    "jakeasmith/http_build_url": "^1"
   },
   "config": {
     "preferred-install": "dist"

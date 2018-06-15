@@ -60,10 +60,10 @@ class Contactform extends Module implements WidgetInterface
 
         parent::__construct();
 
-        $this->displayName = $this->trans('Contact form', [], 'Modules.Contactform.Admin');
+        $this->displayName = $this->trans('Contact form', array(), 'Modules.Contactform.Admin');
         $this->description = $this->trans(
             'Adds a contact form to the "Contact us" page.',
-            [],
+            array(),
             'Modules.Contactform.Admin'
         );
         $this->ps_versions_compliancy = array('min' => '1.7.2.0', 'max' => _PS_VERSION_);
@@ -109,7 +109,7 @@ class Contactform extends Module implements WidgetInterface
      */
     public function getSecurityMarketPlaceLink()
     {
-        $codes = [
+        $codes = array(
             'FR' => 'securite-access',
             'EN' => 'website-security-access',
             'ES' => 'seguridad-y-accesos',
@@ -119,7 +119,7 @@ class Contactform extends Module implements WidgetInterface
             'PL' => 'bezpieczestwa-dostepu',
             'PT' => 'seguranca-acesso',
             'RU' => 'website-security-access',
-        ];
+        );
 
         $languageCode = Tools::strtoupper($this->context->language->language_code);
         if (empty($codes[$languageCode])) {
@@ -135,7 +135,7 @@ class Contactform extends Module implements WidgetInterface
                 $codes[$languageCode],
                 $languageCode
             ),
-            $this->trans('PrestaShop Addons Marketplace', [], 'Admin.Modules.Feature')
+            $this->trans('PrestaShop Addons Marketplace', array(), 'Admin.Modules.Feature')
         );
     }
 
@@ -157,7 +157,7 @@ class Contactform extends Module implements WidgetInterface
         $form = array(
             'form' => array(
                 'legend' => array(
-                    'title' => $this->trans('Parameters', [], 'Modules.Contactform.Admin'),
+                    'title' => $this->trans('Parameters', array(), 'Modules.Contactform.Admin'),
                     'icon' => 'icon-envelope'
                 ),
                 'input' => array(
@@ -165,12 +165,12 @@ class Contactform extends Module implements WidgetInterface
                         'type' => 'switch',
                         'label' => $this->trans(
                             'Send confirmation email to your customers',
-                            [],
+                            array(),
                             'Modules.Contactform.Admin'
                         ),
                         'desc' => $this->trans(
                             "Choose Yes and your customers will receive a generic confirmation email including a tracking number after their message is sent. Note: to discourage spam, the content of their message won't be included in the email.",
-                            [],
+                            array(),
                             'Modules.Contactform.Admin'
                         ),
                         'name' => self::SEND_CONFIRMATION_EMAIL,
@@ -180,12 +180,12 @@ class Contactform extends Module implements WidgetInterface
                             array(
                                 'id' => self::SEND_CONFIRMATION_EMAIL . '_on',
                                 'value' => 1,
-                                'label' => $this->trans('Enabled', [], 'Admin.Global')
+                                'label' => $this->trans('Enabled', array(), 'Admin.Global')
                             ),
                             array(
                                 'id' => self::SEND_CONFIRMATION_EMAIL . '_off',
                                 'value' => 0,
-                                'label' => $this->trans('Disabled', [], 'Admin.Global')
+                                'label' => $this->trans('Disabled', array(), 'Admin.Global')
                             )
                         )
                     ),
@@ -193,12 +193,12 @@ class Contactform extends Module implements WidgetInterface
                         'type' => 'switch',
                         'label' => $this->trans(
                             "Receive customers' messages by email",
-                            [],
+                            array(),
                             'Modules.Contactform.Admin'
                         ),
                         'desc' => $this->trans(
                             'By default, you will only receive contact messages through your Customer service tab.',
-                            [],
+                            array(),
                             'Modules.Contactform.Admin'
                         ),
                         'name' => self::SEND_NOTIFICATION_EMAIL,
@@ -208,19 +208,19 @@ class Contactform extends Module implements WidgetInterface
                             array(
                                 'id' => self::SEND_NOTIFICATION_EMAIL . '_on',
                                 'value' => 1,
-                                'label' => $this->trans('Enabled', [], 'Admin.Global')
+                                'label' => $this->trans('Enabled', array(), 'Admin.Global')
                             ),
                             array(
                                 'id' => self::SEND_NOTIFICATION_EMAIL . '_off',
                                 'value' => 0,
-                                'label' => $this->trans('Disabled', [], 'Admin.Global')
+                                'label' => $this->trans('Disabled', array(), 'Admin.Global')
                             )
                         )
                     )
                 ),
                 'submit' => array(
                     'name' => self::SUBMIT_NAME,
-                    'title' => $this->trans('Save', [], 'Admin.Actions'),
+                    'title' => $this->trans('Save', array(), 'Admin.Actions'),
                 )
             ),
         );
@@ -246,6 +246,7 @@ class Contactform extends Module implements WidgetInterface
     protected function getModuleConfigurationPageLink()
     {
         $parsedUrl = parse_url($this->context->link->getAdminLink('AdminModules', false));
+
         $urlParams = http_build_query(array(
             'configure' => $this->name,
             'tab_module' => $this->tab,
@@ -258,16 +259,16 @@ class Contactform extends Module implements WidgetInterface
             $parsedUrl['query'] = $urlParams;
         }
 
+        /**
+         * http_build_query function is available through composer package jakeasmith/http_build_url
+         */
         return http_build_url($parsedUrl);
     }
 
     /**
-     * @inheritdoc
-     * @param string $hookName
-     * @param array $configuration
-     * @return string
+     * {@inheritdoc}
      */
-    public function renderWidget($hookName = null, array $configuration = [])
+    public function renderWidget($hookName = null, array $configuration = array())
     {
         if (!$this->active) {
             return;
@@ -278,12 +279,9 @@ class Contactform extends Module implements WidgetInterface
     }
 
     /**
-     * @param string|null $hookName
-     * @param array $configuration
-     * @return array
-     * @throws Exception
+     * {@inheritdoc}
      */
-    public function getWidgetVariables($hookName = null, array $configuration = [])
+    public function getWidgetVariables($hookName = null, array $configuration = array())
     {
         $notifications = false;
 
@@ -325,7 +323,7 @@ class Contactform extends Module implements WidgetInterface
         if (!(bool)Configuration::isCatalogMode()) {
             $this->contact['orders'] = $this->getTemplateVarOrders();
         } else {
-            $this->contact['orders'] = [];
+            $this->contact['orders'] = array();
         }
 
         if ($this->customer_thread['email']) {
@@ -341,12 +339,12 @@ class Contactform extends Module implements WidgetInterface
             );
         }
 
-        return [
+        return array(
             'contact' => $this->contact,
             'notifications' => $notifications,
             'token' => $this->context->cookie->contactFormToken,
             'id_module' => $this->id
-        ];
+        );
     }
 
     /**
@@ -365,7 +363,7 @@ class Contactform extends Module implements WidgetInterface
      */
     public function getTemplateVarContact()
     {
-        $contacts = [];
+        $contacts = array();
         $all_contacts = Contact::getContacts($this->context->language->id);
 
         foreach ($all_contacts as $one_contact_id => $one_contact) {
@@ -373,7 +371,7 @@ class Contactform extends Module implements WidgetInterface
         }
 
         if ($this->customer_thread['id_contact']) {
-            return [$contacts[$this->customer_thread['id_contact']]];
+            return array($contacts[$this->customer_thread['id_contact']]);
         }
 
         return $contacts;
@@ -381,11 +379,12 @@ class Contactform extends Module implements WidgetInterface
 
     /**
      * @return array
+     *
      * @throws Exception
      */
     public function getTemplateVarOrders()
     {
-        $orders = [];
+        $orders = array();
 
         if (!isset($this->customer_thread['id_order']) && $this->context->customer->isLogged()) {
             $customer_orders = Order::getCustomerOrders($this->context->customer->id);
@@ -438,19 +437,19 @@ class Contactform extends Module implements WidgetInterface
         if (!($from = trim(Tools::getValue('from'))) || !Validate::isEmail($from)) {
             $this->context->controller->errors[] = $this->trans(
                 'Invalid email address.',
-                [],
+                array(),
                 'Shop.Notifications.Error'
             );
         } elseif (empty($message)) {
             $this->context->controller->errors[] = $this->trans(
                 'The message cannot be blank.',
-                [],
+                array(),
                 'Shop.Notifications.Error'
             );
         } elseif (!Validate::isCleanHtml($message)) {
             $this->context->controller->errors[] = $this->trans(
                 'Invalid message',
-                [],
+                array(),
                 'Shop.Notifications.Error'
             );
         } elseif (!($id_contact = (int)Tools::getValue('id_contact')) ||
@@ -458,13 +457,13 @@ class Contactform extends Module implements WidgetInterface
         ) {
             $this->context->controller->errors[] = $this->trans(
                 'Please select a subject from the list provided. ',
-                [],
+                array(),
                 'Modules.Contactform.Shop'
             );
         } elseif (!empty($file_attachment['name']) && $file_attachment['error'] != 0) {
             $this->context->controller->errors[] = $this->trans(
                 'An error occurred during the file-upload process.',
-                [],
+                array(),
                 'Modules.Contactform.Shop'
             );
         } elseif (!empty($file_attachment['name']) &&
@@ -473,7 +472,7 @@ class Contactform extends Module implements WidgetInterface
         ) {
             $this->context->controller->errors[] = $this->trans(
                 'Bad file extension',
-                [],
+                array(),
                 'Modules.Contactform.Shop'
             );
         } elseif ($url !== ''
@@ -483,7 +482,7 @@ class Contactform extends Module implements WidgetInterface
         ) {
             $this->context->controller->errors[] = $this->trans(
                 'An error occurred while sending the message, please try again.',
-                [],
+                array(),
                 'Modules.Contactform.Shop'
             );
             $this->createNewToken();
@@ -556,7 +555,7 @@ class Contactform extends Module implements WidgetInterface
                         if (!$cm->add()) {
                             $this->context->controller->errors[] = $this->trans(
                                 'An error occurred while sending the message.',
-                                [],
+                                array(),
                                 'Modules.Contactform.Shop'
                             );
                         }
@@ -566,7 +565,7 @@ class Contactform extends Module implements WidgetInterface
                 } else {
                     $this->context->controller->errors[] = $this->trans(
                         'An error occurred while sending the message.',
-                        [],
+                        array(),
                         'Modules.Contactform.Shop'
                     );
                 }
@@ -578,13 +577,13 @@ class Contactform extends Module implements WidgetInterface
                 && empty($mailAlreadySend)
                 && ($sendConfirmationEmail || $sendNotificationEmail)
             ) {
-                $var_list = [
+                $var_list = array(
                     '{order_name}' => '-',
                     '{attached_file}' => '-',
                     '{message}' => Tools::nl2br(Tools::stripslashes($message)),
                     '{email}' =>  $from,
                     '{product_name}' => '',
-                ];
+                );
 
                 if (isset($file_attachment['name'])) {
                     $var_list['{attached_file}'] = $file_attachment['name'];
@@ -611,7 +610,7 @@ class Contactform extends Module implements WidgetInterface
                     if (empty($contact->email) || !Mail::Send(
                         $this->context->language->id,
                         'contact',
-                        $this->trans('Message from contact form', [], 'Emails.Subject').' [no_sync]',
+                        $this->trans('Message from contact form', array(), 'Emails.Subject').' [no_sync]',
                         $var_list,
                         $contact->email,
                         $contact->name,
@@ -627,7 +626,7 @@ class Contactform extends Module implements WidgetInterface
                     )) {
                         $this->context->controller->errors[] = $this->trans(
                             'An error occurred while sending the message.',
-                            [],
+                            array(),
                             'Modules.Contactform.Shop'
                         );
                     }
@@ -641,12 +640,12 @@ class Contactform extends Module implements WidgetInterface
                         'contact_form',
                         ((isset($ct) && Validate::isLoadedObject($ct)) ? $this->trans(
                             'Your message has been correctly sent #ct%thread_id% #tc%thread_token%',
-                            [
+                            array(
                                 '%thread_id%' => $ct->id,
                                 '%thread_token%' => $ct->token
-                            ],
+                            ),
                             'Emails.Subject'
-                        ) : $this->trans('Your message has been correctly sent', [], 'Emails.Subject')),
+                        ) : $this->trans('Your message has been correctly sent', array(), 'Emails.Subject')),
                         $var_list,
                         $from,
                         null,
@@ -662,7 +661,7 @@ class Contactform extends Module implements WidgetInterface
                     )) {
                         $this->context->controller->errors[] = $this->trans(
                             'An error occurred while sending the message.',
-                            [],
+                            array(),
                             'Modules.Contactform.Shop'
                         );
                     }
@@ -672,7 +671,7 @@ class Contactform extends Module implements WidgetInterface
             if (!count($this->context->controller->errors)) {
                 $this->context->controller->success[] = $this->trans(
                     'Your message has been successfully sent to our team.',
-                    [],
+                    array(),
                     'Modules.Contactform.Shop'
                 );
             }
