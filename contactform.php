@@ -574,10 +574,7 @@ class Contactform extends Module implements WidgetInterface
             $sendConfirmationEmail = Configuration::get(self::SEND_CONFIRMATION_EMAIL);
             $sendNotificationEmail = Configuration::get(self::SEND_NOTIFICATION_EMAIL);
 
-            if (!count($this->context->controller->errors)
-                && empty($mailAlreadySend)
-                && ($sendConfirmationEmail || $sendNotificationEmail)
-            ) {
+            if (!count($this->context->controller->errors) && empty($mailAlreadySend)) {
                 $var_list = [
                     '{order_name}' => '-',
                     '{attached_file}' => '-',
