@@ -441,6 +441,12 @@ class Contactform extends Module implements WidgetInterface
                 [],
                 'Shop.Notifications.Error'
             );
+        } elseif (strlen(Tools::getValue('from')) > 255) {
+            $this->context->controller->errors[] = $this->trans(
+                'Invalid email address.',
+                [],
+                'Shop.Notifications.Error'
+            );
         } elseif (empty($message)) {
             $this->context->controller->errors[] = $this->trans(
                 'The message cannot be blank.',
