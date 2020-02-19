@@ -388,7 +388,9 @@ class Contactform extends Module implements WidgetInterface
     {
         $orders = [];
 
-        if (!isset($this->customer_thread['id_order']) && $this->context->customer->isLogged()) {
+        if (!isset($this->customer_thread['id_order'])
+            && isset($this->context->customer)
+            && $this->context->customer->isLogged()) {
             $customer_orders = Order::getCustomerOrders($this->context->customer->id);
 
             foreach ($customer_orders as $customer_order) {
