@@ -37,6 +37,15 @@ class Contactform extends Module implements WidgetInterface
 
     /** @var string */
     const SEND_NOTIFICATION_EMAIL = 'CONTACTFORM_SEND_NOTIFICATION_EMAIL';
+    
+    /** @var string */
+    const RECAPTCHA_PUBLIC_KEY = 'CONTACTFORM_RECAPTHCA_PUBLIC_KEY';
+    
+    /** @var string */
+    const RECAPTCHA_SECRET_KEY = 'CONTACTFORM_RECAPTHCA_SECRET_KEY';
+
+    /** @var string */
+    const USE_RECAPTCHA = 'CONTACTFORM_USE_RECAPTCHA';
 
     /** @var string */
     const MESSAGE_PLACEHOLDER_FOR_OLDER_VERSION = '(hidden)';
@@ -99,6 +108,18 @@ class Contactform extends Module implements WidgetInterface
                 self::SEND_NOTIFICATION_EMAIL,
                 Tools::getValue(self::SEND_NOTIFICATION_EMAIL)
             );
+            Configuration::updateValue(
+                self::USE_RECAPTCHA,
+                Tools::getValue(self::USE_RECAPTCHA)
+            );
+            Configuration::updateValue(
+                self::RECAPTCHA_SECRET_KEY,
+                Tools::getValue(self::RECAPTCHA_SECRET_KEY)
+            );
+            Configuration::updateValue(
+                self::RECAPTCHA_PUBLIC_KEY,
+                Tools::getValue(self::RECAPTCHA_PUBLIC_KEY)
+            );
         }
 
         return $html;
@@ -152,7 +173,19 @@ class Contactform extends Module implements WidgetInterface
             self::SEND_NOTIFICATION_EMAIL => Tools::getValue(
                 self::SEND_NOTIFICATION_EMAIL,
                 Configuration::get(self::SEND_NOTIFICATION_EMAIL)
-            )
+            ),
+            self::USE_RECAPTCHA => Tools::getValue(
+                self::USE_RECAPTCHA,
+                Configuration::get(self::USE_RECAPTCHA)
+            ),
+            self::RECAPTCHA_SECRET_KEY => Tools::getValue(
+                self::RECAPTCHA_SECRET_KEY,
+                Configuration::get(self::RECAPTCHA_SECRET_KEY)
+            ),
+            self::RECAPTCHA_PUBLIC_KEY => Tools::getValue(
+                self::RECAPTCHA_PUBLIC_KEY,
+                Configuration::get(self::RECAPTCHA_PUBLIC_KEY)
+            ),
         );
         $form = array(
             'form' => array(
@@ -216,6 +249,40 @@ class Contactform extends Module implements WidgetInterface
                                 'label' => $this->trans('Disabled', [], 'Admin.Global')
                             )
                         )
+                    ),
+                    array(
+                        'type' => 'switch',
+                        'label' => 'Use google reCaptha2',
+                        'desc' => 'Check if you want to use google reCaptcha2',
+                        'name' => self::USE_RECAPTCHA,
+                        'is_bool' => true,
+                        'required' => true,
+                        'values' => array(
+                            array(
+                                'id' => self::USE_RECAPTCHA . '_on',
+                                'value' => 1,
+                                'label' => 'Enabled'
+                            ),
+                            array(
+                                'id' => self::USE_RECAPTCHA . '_off',
+                                'value' => 0,
+                                'label' => 'Disabled'
+                            )
+                        )
+                    ),
+                    array(
+                        'type' => 'text',
+                        'label' => $this->l('Public key'),
+                        'name' => self::RECAPTCHA_PUBLIC_KEY,
+                        'size' => 20,
+                        'required' => FALSE
+                    ),
+                    array(
+                        'type' => 'text',
+                        'label' => $this->l('Secret key'),
+                        'name' => self::RECAPTCHA_SECRET_KEY,
+                        'size' => 20,
+                        'required' => FALSE
                     )
                 ),
                 'submit' => array(
@@ -345,7 +412,8 @@ class Contactform extends Module implements WidgetInterface
             'contact' => $this->contact,
             'notifications' => $notifications,
             'token' => $this->context->cookie->contactFormToken,
-            'id_module' => $this->id
+            'id_module' => $this->id,
+            'reCaptchaPublicKey' => Configuration::get(self::RECAPTCHA_PUBLIC_KEY),
         ];
     }
 
@@ -434,8 +502,29 @@ class Contactform extends Module implements WidgetInterface
         $clientToken = Tools::getValue('token');
         $serverToken = $this->context->cookie->contactFormToken;
         $clientTokenTTL = $this->context->cookie->contactFormTokenTTL;
-
-        if (!($from = trim(Tools::getValue('from'))) || !Validate::isEmail($from)) {
+        $useReCaptcha = (int)Configuration::get(self::USE_RECAPTCHA);
+        $reCaptchaSuccess = false;
+        
+        //If user is not logged in and we want to use reCaptcha
+        if (!$this->context->customer->isLogged() && $useReCaptcha) {
+            //start checking
+            $secretKey = Configuration::get(self::RECAPTCHA_SECRET_KEY);
+            //google recaptch check
+            $response_google=file_get_contents(
+                "https://www.google.com/recaptcha/api/siteverify?secret=".$secretKey.
+                "&response=".$_POST['g-recaptcha-response'].
+                "&remoteip=".$_SERVER['REMOTE_ADDR']);
+            $obj_google = json_decode($response_google);
+            $reCaptchaSuccess = $obj_google->success;
+        }
+        
+        if (!$this->context->customer->isLogged() && $useReCaptcha && !$reCaptchaSuccess){
+            $this->context->controller->errors[] = $this->trans(
+                    'Please, confirm you are not the robot.',
+                    [],
+                    'Modules.Contactform.Shop'
+            );
+        } elseif (!($from = trim(Tools::getValue('from'))) || !Validate::isEmail($from)) {
             $this->context->controller->errors[] = $this->trans(
                 'Invalid email address.',
                 [],

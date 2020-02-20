@@ -23,6 +23,10 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
+{if !$contact.orders && isset($reCaptchaPublicKey)}
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+{/if}
+
 {block name="page_title"}
   {l s='Customer service - Contact us' d='Modules.Contactform.Shop'}
 {/block}
@@ -89,6 +93,10 @@
         {hook h='displayGDPRConsent' id_module=$id_module}
 
       </section>
+
+{if !$contact.orders && isset($reCaptchaPublicKey)}
+<div class="g-recaptcha" data-sitekey="{$reCaptchaPublicKey}"></div>
+{/if}
 
       <footer class="form-footer">
         <style>
