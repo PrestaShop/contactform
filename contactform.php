@@ -507,13 +507,12 @@ class Contactform extends Module implements WidgetInterface
         
         //If user is not logged in and we want to use reCaptcha
         if (!$this->context->customer->isLogged() && $useReCaptcha) {
-            //start checking
-            $secretKey = Configuration::get(self::RECAPTCHA_SECRET_KEY);
             //google recaptch check
             $response_google=file_get_contents(
-                "https://www.google.com/recaptcha/api/siteverify?secret=".$secretKey.
-                "&response=".$_POST['g-recaptcha-response'].
-                "&remoteip=".$_SERVER['REMOTE_ADDR']);
+                "https://www.google.com/recaptcha/api/siteverify?secret=" .
+                    Configuration::get(self::RECAPTCHA_SECRET_KEY) .
+                "&response=".Tools::getValue('g-recaptcha-response') .
+                "&remoteip=".Tools::getRemoteAddr());
             $obj_google = json_decode($response_google);
             $reCaptchaSuccess = $obj_google->success;
         }
