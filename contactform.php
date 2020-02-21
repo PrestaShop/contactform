@@ -502,7 +502,7 @@ class Contactform extends Module implements WidgetInterface
         $clientToken = Tools::getValue('token');
         $serverToken = $this->context->cookie->contactFormToken;
         $clientTokenTTL = $this->context->cookie->contactFormTokenTTL;
-        $useReCaptcha = (int)Configuration::get(self::USE_RECAPTCHA);
+        $useReCaptcha = (int) Configuration::get(self::USE_RECAPTCHA);
         $reCaptchaSuccess = false;
         
         //If user is not logged in and we want to use reCaptcha
