@@ -514,7 +514,7 @@ class Contactform extends Module implements WidgetInterface
                 "&response=".Tools::getValue('g-recaptcha-response') .
                 "&remoteip=".Tools::getRemoteAddr());
             $obj_google = json_decode($response_google);
-            $reCaptchaSuccess = $obj_google->success;
+            $reCaptchaSuccess = isset($obj_google->success) ? $obj_google->success : false;
         }
         
         if (!$this->context->customer->isLogged() && $useReCaptcha && !$reCaptchaSuccess){
