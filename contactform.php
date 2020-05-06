@@ -326,7 +326,7 @@ class Contactform extends Module implements WidgetInterface
             $this->contact['orders'] = [];
         }
 
-        if ($this->customer_thread['email']) {
+        if (isset($this->customer_thread['email'])) {
             $this->contact['email'] = $this->customer_thread['email'];
         } else {
             $this->contact['email'] = Tools::safeOutput(
@@ -370,7 +370,7 @@ class Contactform extends Module implements WidgetInterface
             $contacts[$one_contact['id_contact']] = $one_contact;
         }
 
-        if ($this->customer_thread['id_contact']) {
+        if (isset($this->customer_thread['id_contact'])) {
             return [
                 $contacts[$this->customer_thread['id_contact']]
             ];
@@ -401,7 +401,7 @@ class Contactform extends Module implements WidgetInterface
                     $orders[$customer_order['id_order']]['products'] = $myOrder->getProducts();
                 }
             }
-        } elseif ((int)$this->customer_thread['id_order'] > 0) {
+        } elseif (isset($this->customer_thread['id_order']) && (int)$this->customer_thread['id_order'] > 0) {
             $myOrder = new Order($this->customer_thread['id_order']);
 
             if (Validate::isLoadedObject($myOrder)) {
@@ -411,7 +411,7 @@ class Contactform extends Module implements WidgetInterface
             }
         }
 
-        if ($this->customer_thread['id_product']) {
+        if (isset($this->customer_thread['id_product'])) {
             $id_order = isset($this->customer_thread['id_order']) ?
                       (int)$this->customer_thread['id_order'] :
                       0;
