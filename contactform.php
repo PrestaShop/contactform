@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2017 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Academic Free License (AFL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/afl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ *  @author PrestaShop SA <contact@prestashop.com>
+ *  @copyright  2007-2018 PrestaShop SA
+ *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -55,7 +55,7 @@ class Contactform extends Module implements WidgetInterface
         $this->name = 'contactform';
         $this->author = 'PrestaShop';
         $this->tab = 'front_office_features';
-        $this->version = '4.1.1';
+        $this->version = '4.2.0';
         $this->bootstrap = true;
 
         parent::__construct();
@@ -66,7 +66,10 @@ class Contactform extends Module implements WidgetInterface
             [],
             'Modules.Contactform.Admin'
         );
-        $this->ps_versions_compliancy = array('min' => '1.7.2.0', 'max' => _PS_VERSION_);
+        $this->ps_versions_compliancy = [
+            'min' => '1.7.2.0',
+            'max' => _PS_VERSION_
+        ];
     }
 
     /**
@@ -84,7 +87,7 @@ class Contactform extends Module implements WidgetInterface
     {
         $message = $this->trans(
             'For even more security on your website forms, consult our Security & Access modules category on the %link%',
-            array('%link%' => $this->getSecurityMarketPlaceLink()),
+            ['%link%' => $this->getSecurityMarketPlaceLink()],
             'Modules.Contactform.Admin'
         );
         $html = "<div class='alert alert-info'>$message</div>";
@@ -121,7 +124,7 @@ class Contactform extends Module implements WidgetInterface
             'RU' => 'website-security-access',
         ];
 
-        $languageCode = strtoupper($this->context->language->language_code);
+        $languageCode = Tools::strtoupper($this->context->language->language_code);
         if (empty($codes[$languageCode])) {
             $languageCode = 'EN';
         }
@@ -131,7 +134,7 @@ class Contactform extends Module implements WidgetInterface
             sprintf(
                 'https://addons.prestashop.com/%s/429-%s?utm_source=back-office&' .
                 'utm_medium=native-contactform&utm_campaign=back-office-%s&utm_content=security',
-                strtolower($languageCode),
+                Tools::strtolower($languageCode),
                 $codes[$languageCode],
                 $languageCode
             ),
@@ -144,7 +147,7 @@ class Contactform extends Module implements WidgetInterface
      */
     protected function renderForm()
     {
-        $fieldsValue = array(
+        $fieldsValue = [
             self::SEND_CONFIRMATION_EMAIL => Tools::getValue(
                 self::SEND_CONFIRMATION_EMAIL,
                 Configuration::get(self::SEND_CONFIRMATION_EMAIL)
@@ -153,15 +156,15 @@ class Contactform extends Module implements WidgetInterface
                 self::SEND_NOTIFICATION_EMAIL,
                 Configuration::get(self::SEND_NOTIFICATION_EMAIL)
             )
-        );
-        $form = array(
-            'form' => array(
-                'legend' => array(
+        ];
+        $form = [
+            'form' => [
+                'legend' => [
                     'title' => $this->trans('Parameters', [], 'Modules.Contactform.Admin'),
                     'icon' => 'icon-envelope'
-                ),
-                'input' => array(
-                    array(
+                ],
+                'input' => [
+                    [
                         'type' => 'switch',
                         'label' => $this->trans(
                             'Send confirmation email to your customers',
@@ -176,20 +179,20 @@ class Contactform extends Module implements WidgetInterface
                         'name' => self::SEND_CONFIRMATION_EMAIL,
                         'is_bool' => true,
                         'required' => true,
-                        'values' => array(
-                            array(
+                        'values' => [
+                            [
                                 'id' => self::SEND_CONFIRMATION_EMAIL . '_on',
                                 'value' => 1,
                                 'label' => $this->trans('Enabled', [], 'Admin.Global')
-                            ),
-                            array(
+                            ],
+                            [
                                 'id' => self::SEND_CONFIRMATION_EMAIL . '_off',
                                 'value' => 0,
                                 'label' => $this->trans('Disabled', [], 'Admin.Global')
-                            )
-                        )
-                    ),
-                    array(
+                            ]
+                        ]
+                    ],
+                    [
                         'type' => 'switch',
                         'label' => $this->trans(
                             "Receive customers' messages by email",
@@ -204,26 +207,26 @@ class Contactform extends Module implements WidgetInterface
                         'name' => self::SEND_NOTIFICATION_EMAIL,
                         'is_bool' => true,
                         'required' => true,
-                        'values' => array(
-                            array(
+                        'values' => [
+                            [
                                 'id' => self::SEND_NOTIFICATION_EMAIL . '_on',
                                 'value' => 1,
                                 'label' => $this->trans('Enabled', [], 'Admin.Global')
-                            ),
-                            array(
+                            ],
+                            [
                                 'id' => self::SEND_NOTIFICATION_EMAIL . '_off',
                                 'value' => 0,
                                 'label' => $this->trans('Disabled', [], 'Admin.Global')
-                            )
-                        )
-                    )
-                ),
-                'submit' => array(
+                            ]
+                        ]
+                    ]
+                ],
+                'submit' => [
                     'name' => self::SUBMIT_NAME,
                     'title' => $this->trans('Save', [], 'Admin.Actions'),
-                )
-            ),
-        );
+                ]
+            ],
+        ];
         $helper = new HelperForm();
         $helper->table = $this->table;
         $lang = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
@@ -231,13 +234,13 @@ class Contactform extends Module implements WidgetInterface
         $helper->submit_action = 'update-configuration';
         $helper->currentIndex = $this->getModuleConfigurationPageLink();
         $helper->token = Tools::getAdminTokenLite('AdminModules');
-        $helper->tpl_vars = array(
+        $helper->tpl_vars = [
             'fields_value' => $fieldsValue,
             'languages' => $this->context->controller->getLanguages(),
             'id_language' => $this->context->language->id
-        );
+        ];
 
-        return $helper->generateForm(array($form));
+        return $helper->generateForm([$form]);
     }
 
     /**
@@ -246,11 +249,14 @@ class Contactform extends Module implements WidgetInterface
     protected function getModuleConfigurationPageLink()
     {
         $parsedUrl = parse_url($this->context->link->getAdminLink('AdminModules', false));
-        $urlParams = http_build_query(array(
-            'configure' => $this->name,
-            'tab_module' => $this->tab,
-            'module_name' => $this->name
-        ));
+
+        $urlParams = http_build_query(
+            [
+                'configure' => $this->name,
+                'tab_module' => $this->tab,
+                'module_name' => $this->name,
+            ]
+        );
 
         if (!empty($parsedUrl['query'])) {
             $parsedUrl['query'] .= "&$urlParams";
@@ -258,14 +264,14 @@ class Contactform extends Module implements WidgetInterface
             $parsedUrl['query'] = $urlParams;
         }
 
+        /**
+         * http_build_query function is available through composer package jakeasmith/http_build_url
+         */
         return http_build_url($parsedUrl);
     }
 
     /**
-     * @inheritdoc
-     * @param string $hookName
-     * @param array $configuration
-     * @return string
+     * {@inheritdoc}
      */
     public function renderWidget($hookName = null, array $configuration = [])
     {
@@ -278,10 +284,7 @@ class Contactform extends Module implements WidgetInterface
     }
 
     /**
-     * @param string|null $hookName
-     * @param array $configuration
-     * @return array
-     * @throws Exception
+     * {@inheritdoc}
      */
     public function getWidgetVariables($hookName = null, array $configuration = [])
     {
@@ -311,11 +314,6 @@ class Contactform extends Module implements WidgetInterface
 
             if ($cm->token == $token) {
                 $this->customer_thread = $this->context->controller->objectPresenter->present($cm);
-                $order = new Order((int)$this->customer_thread['id_order']);
-
-                if (Validate::isLoadedObject($order)) {
-                    $customer_thread['reference'] = $order->getUniqReference();
-                }
             }
         }
         $this->contact['contacts'] = $this->getTemplateVarContact();
@@ -328,7 +326,7 @@ class Contactform extends Module implements WidgetInterface
             $this->contact['orders'] = [];
         }
 
-        if ($this->customer_thread['email']) {
+        if (isset($this->customer_thread['email'])) {
             $this->contact['email'] = $this->customer_thread['email'];
         } else {
             $this->contact['email'] = Tools::safeOutput(
@@ -368,12 +366,14 @@ class Contactform extends Module implements WidgetInterface
         $contacts = [];
         $all_contacts = Contact::getContacts($this->context->language->id);
 
-        foreach ($all_contacts as $one_contact_id => $one_contact) {
+        foreach ($all_contacts as $one_contact) {
             $contacts[$one_contact['id_contact']] = $one_contact;
         }
 
-        if ($this->customer_thread['id_contact']) {
-            return [$contacts[$this->customer_thread['id_contact']]];
+        if (isset($this->customer_thread['id_contact'])) {
+            return [
+                $contacts[$this->customer_thread['id_contact']]
+            ];
         }
 
         return $contacts;
@@ -381,13 +381,16 @@ class Contactform extends Module implements WidgetInterface
 
     /**
      * @return array
+     *
      * @throws Exception
      */
     public function getTemplateVarOrders()
     {
         $orders = [];
 
-        if (!isset($this->customer_thread['id_order']) && $this->context->customer->isLogged()) {
+        if (!isset($this->customer_thread['id_order'])
+            && isset($this->context->customer)
+            && $this->context->customer->isLogged()) {
             $customer_orders = Order::getCustomerOrders($this->context->customer->id);
 
             foreach ($customer_orders as $customer_order) {
@@ -398,7 +401,7 @@ class Contactform extends Module implements WidgetInterface
                     $orders[$customer_order['id_order']]['products'] = $myOrder->getProducts();
                 }
             }
-        } elseif ((int)$this->customer_thread['id_order'] > 0) {
+        } elseif (isset($this->customer_thread['id_order']) && (int)$this->customer_thread['id_order'] > 0) {
             $myOrder = new Order($this->customer_thread['id_order']);
 
             if (Validate::isLoadedObject($myOrder)) {
@@ -408,7 +411,7 @@ class Contactform extends Module implements WidgetInterface
             }
         }
 
-        if ($this->customer_thread['id_product']) {
+        if (isset($this->customer_thread['id_product'])) {
             $id_order = isset($this->customer_thread['id_order']) ?
                       (int)$this->customer_thread['id_order'] :
                       0;
@@ -427,7 +430,7 @@ class Contactform extends Module implements WidgetInterface
      */
     public function sendMessage()
     {
-        $extension = array('.txt', '.rtf', '.doc', '.docx', '.pdf', '.zip', '.png', '.jpeg', '.gif', '.jpg');
+        $extension = ['.txt', '.rtf', '.doc', '.docx', '.pdf', '.zip', '.png', '.jpeg', '.gif', '.jpg'];
         $file_attachment = Tools::fileAttachment('fileUpload');
         $message = trim(Tools::getValue('message'));
         $url = Tools::getValue('url');
@@ -468,8 +471,8 @@ class Contactform extends Module implements WidgetInterface
                 'Modules.Contactform.Shop'
             );
         } elseif (!empty($file_attachment['name']) &&
-                  !in_array(Tools::strtolower(substr($file_attachment['name'], -4)), $extension) &&
-                  !in_array(Tools::strtolower(substr($file_attachment['name'], -5)), $extension)
+                  !in_array(Tools::strtolower(Tools::substr($file_attachment['name'], -4)), $extension) &&
+                  !in_array(Tools::strtolower(Tools::substr($file_attachment['name'], -5)), $extension)
         ) {
             $this->context->controller->errors[] = $this->trans(
                 'Bad file extension',
@@ -581,7 +584,7 @@ class Contactform extends Module implements WidgetInterface
                 $var_list = [
                     '{order_name}' => '-',
                     '{attached_file}' => '-',
-                    '{message}' => Tools::nl2br(stripslashes($message)),
+                    '{message}' => Tools::nl2br(Tools::stripslashes($message)),
                     '{email}' =>  $from,
                     '{product_name}' => '',
                 ];

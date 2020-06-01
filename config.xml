@@ -2,8 +2,8 @@
 <module>
     <name>contactform</name>
     <displayName><![CDATA[Contact form]]></displayName>
-    <version><![CDATA[4.1.1]]></version>
-    <description><![CDATA[Description for contact form module]]></description>
+    <version><![CDATA[4.2.0]]></version>
+    <description><![CDATA[Adds a contact form to the "Contact us" page.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[front_office_features]]></tab>
     <is_configurable>0</is_configurable>
