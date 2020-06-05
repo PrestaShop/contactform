@@ -1,0 +1,20 @@
+GitHub contributors:
+--------------------------------
+ - eternoendless
+ - Maxime Biloé
+ - aleeks
+ - matks
+ - PierreRambaud
+ - maximebiloe
+ - julienbourdeau
+ - florian-nolte
+ - mickaelandrieu
+ - Progi1984
+ - alegout
+ - AntoineMille
+ - arouiadib
+ - Alex Even
+ - antoin-m
+ - Quetzacoalt91
+ - fatmaBouchekoua
+ - marionf
