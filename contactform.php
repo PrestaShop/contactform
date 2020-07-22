@@ -582,12 +582,19 @@ class Contactform extends Module implements WidgetInterface
                 && ($sendConfirmationEmail || $sendNotificationEmail)
             ) {
                 $var_list = [
+                    '{firstname}' => '',
+                    '{lastname}' => '',
                     '{order_name}' => '-',
                     '{attached_file}' => '-',
                     '{message}' => Tools::nl2br(Tools::stripslashes($message)),
                     '{email}' =>  $from,
                     '{product_name}' => '',
                 ];
+
+                if (isset($customer->id)) {
+                    $var_list['{firstname}'] = $customer->firstname;
+                    $var_list['{lastname}'] = $customer->lastname;
+                }
 
                 if (isset($file_attachment['name'])) {
                     $var_list['{attached_file}'] = $file_attachment['name'];
