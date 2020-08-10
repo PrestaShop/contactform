@@ -317,7 +317,7 @@ class Contactform extends Module implements WidgetInterface
             }
         }
         $this->contact['contacts'] = $this->getTemplateVarContact();
-        $this->contact['message'] = html_entity_decode(Tools::getValue('message'));
+        $this->contact['message'] = Tools::getValue('message');
         $this->contact['allow_file_upload'] = (bool) Configuration::get('PS_CUSTOMER_SERVICE_FILE_UPLOAD');
 
         if (!(bool)Configuration::isCatalogMode()) {
@@ -388,9 +388,10 @@ class Contactform extends Module implements WidgetInterface
     {
         $orders = [];
 
-        if (!isset($this->customer_thread['id_order'])
+        if (empty($this->customer_thread['id_order'])
             && isset($this->context->customer)
-            && $this->context->customer->isLogged()) {
+            && $this->context->customer->isLogged()
+        ) {
             $customer_orders = Order::getCustomerOrders($this->context->customer->id);
 
             foreach ($customer_orders as $customer_order) {
@@ -401,7 +402,7 @@ class Contactform extends Module implements WidgetInterface
                     $orders[$customer_order['id_order']]['products'] = $myOrder->getProducts();
                 }
             }
-        } elseif (isset($this->customer_thread['id_order']) && (int)$this->customer_thread['id_order'] > 0) {
+        } elseif (isset($this->customer_thread['id_order']) && (int) $this->customer_thread['id_order'] > 0) {
             $myOrder = new Order($this->customer_thread['id_order']);
 
             if (Validate::isLoadedObject($myOrder)) {
@@ -411,13 +412,13 @@ class Contactform extends Module implements WidgetInterface
             }
         }
 
-        if (isset($this->customer_thread['id_product'])) {
+        if (!empty($this->customer_thread['id_product'])) {
             $id_order = isset($this->customer_thread['id_order']) ?
-                      (int)$this->customer_thread['id_order'] :
+                      (int) $this->customer_thread['id_order'] :
                       0;
 
             $orders[$id_order]['products'][(int)$this->customer_thread['id_product']] = $this->context->controller->objectPresenter->present(
-                new Product((int)$this->customer_thread['id_product'])
+                new Product((int) $this->customer_thread['id_product'])
             );
         }
 
@@ -584,7 +585,7 @@ class Contactform extends Module implements WidgetInterface
                 $var_list = [
                     '{order_name}' => '-',
                     '{attached_file}' => '-',
-                    '{message}' => Tools::nl2br(Tools::stripslashes($message)),
+                    '{message}' => Tools::nl2br(Tools::htmlentitiesUTF8(Tools::stripslashes($message))),
                     '{email}' =>  $from,
                     '{product_name}' => '',
                 ];
