@@ -1,13 +1,14 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Academic Free License (AFL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/afl-3.0.php
+ * https://opensource.org/licenses/AFL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2018 PrestaShop SA
- *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  */
 
 if (!defined('_PS_VERSION_')) {
@@ -55,7 +55,7 @@ class Contactform extends Module implements WidgetInterface
         $this->name = 'contactform';
         $this->author = 'PrestaShop';
         $this->tab = 'front_office_features';
-        $this->version = '4.2.0';
+        $this->version = '4.3.0';
         $this->bootstrap = true;
 
         parent::__construct();
@@ -317,7 +317,7 @@ class Contactform extends Module implements WidgetInterface
             }
         }
         $this->contact['contacts'] = $this->getTemplateVarContact();
-        $this->contact['message'] = html_entity_decode(Tools::getValue('message'));
+        $this->contact['message'] = Tools::getValue('message');
         $this->contact['allow_file_upload'] = (bool) Configuration::get('PS_CUSTOMER_SERVICE_FILE_UPLOAD');
 
         if (!(bool)Configuration::isCatalogMode()) {
@@ -388,9 +388,10 @@ class Contactform extends Module implements WidgetInterface
     {
         $orders = [];
 
-        if (!isset($this->customer_thread['id_order'])
+        if (empty($this->customer_thread['id_order'])
             && isset($this->context->customer)
-            && $this->context->customer->isLogged()) {
+            && $this->context->customer->isLogged()
+        ) {
             $customer_orders = Order::getCustomerOrders($this->context->customer->id);
 
             foreach ($customer_orders as $customer_order) {
@@ -401,7 +402,7 @@ class Contactform extends Module implements WidgetInterface
                     $orders[$customer_order['id_order']]['products'] = $myOrder->getProducts();
                 }
             }
-        } elseif (isset($this->customer_thread['id_order']) && (int)$this->customer_thread['id_order'] > 0) {
+        } elseif (isset($this->customer_thread['id_order']) && (int) $this->customer_thread['id_order'] > 0) {
             $myOrder = new Order($this->customer_thread['id_order']);
 
             if (Validate::isLoadedObject($myOrder)) {
@@ -411,13 +412,13 @@ class Contactform extends Module implements WidgetInterface
             }
         }
 
-        if (isset($this->customer_thread['id_product'])) {
+        if (!empty($this->customer_thread['id_product'])) {
             $id_order = isset($this->customer_thread['id_order']) ?
-                      (int)$this->customer_thread['id_order'] :
+                      (int) $this->customer_thread['id_order'] :
                       0;
 
             $orders[$id_order]['products'][(int)$this->customer_thread['id_product']] = $this->context->controller->objectPresenter->present(
-                new Product((int)$this->customer_thread['id_product'])
+                new Product((int) $this->customer_thread['id_product'])
             );
         }
 
@@ -582,20 +583,27 @@ class Contactform extends Module implements WidgetInterface
                 && ($sendConfirmationEmail || $sendNotificationEmail)
             ) {
                 $var_list = [
+                    '{firstname}' => '',
+                    '{lastname}' => '',
                     '{order_name}' => '-',
                     '{attached_file}' => '-',
-                    '{message}' => Tools::nl2br(Tools::stripslashes($message)),
+                    '{message}' => Tools::nl2br(Tools::htmlentitiesUTF8(Tools::stripslashes($message))),
                     '{email}' =>  $from,
                     '{product_name}' => '',
                 ];
+
+                if (isset($customer->id)) {
+                    $var_list['{firstname}'] = $customer->firstname;
+                    $var_list['{lastname}'] = $customer->lastname;
+                }
 
                 if (isset($file_attachment['name'])) {
                     $var_list['{attached_file}'] = $file_attachment['name'];
                 }
                 $id_product = (int)Tools::getValue('id_product');
 
-                if (isset($ct) && Validate::isLoadedObject($ct) && $ct->id_order) {
-                    $order = new Order((int)$ct->id_order);
+                if ($id_order) {
+                    $order = new Order((int)$id_order);
                     $var_list['{order_name}'] = $order->getUniqReference();
                     $var_list['{id_order}'] = (int)$order->id;
                 }
