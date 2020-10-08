@@ -183,12 +183,12 @@ class Contactform extends Module implements WidgetInterface
                             [
                                 'id' => self::SEND_CONFIRMATION_EMAIL . '_on',
                                 'value' => 1,
-                                'label' => $this->trans('Enabled', [], 'Admin.Global')
+                                'label' => $this->trans('Yes', [], 'Admin.Global')
                             ],
                             [
                                 'id' => self::SEND_CONFIRMATION_EMAIL . '_off',
                                 'value' => 0,
-                                'label' => $this->trans('Disabled', [], 'Admin.Global')
+                                'label' => $this->trans('No', [], 'Admin.Global')
                             ]
                         ]
                     ],
@@ -211,12 +211,12 @@ class Contactform extends Module implements WidgetInterface
                             [
                                 'id' => self::SEND_NOTIFICATION_EMAIL . '_on',
                                 'value' => 1,
-                                'label' => $this->trans('Enabled', [], 'Admin.Global')
+                                'label' => $this->trans('Yes', [], 'Admin.Global')
                             ],
                             [
                                 'id' => self::SEND_NOTIFICATION_EMAIL . '_off',
                                 'value' => 0,
-                                'label' => $this->trans('Disabled', [], 'Admin.Global')
+                                'label' => $this->trans('No', [], 'Admin.Global')
                             ]
                         ]
                     ]
