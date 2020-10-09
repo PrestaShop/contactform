@@ -102,6 +102,8 @@ class Contactform extends Module implements WidgetInterface
                 self::SEND_NOTIFICATION_EMAIL,
                 Tools::getValue(self::SEND_NOTIFICATION_EMAIL)
             );
+
+            Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules') . '&configure=' . $this->name . '&conf=6');
         }
 
         return $html;
