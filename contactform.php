@@ -691,4 +691,16 @@ class Contactform extends Module implements WidgetInterface
             }
         }
     }
+
+    /**
+     * empty listener for registerGDPRConsent hook
+     */
+    public function hookRegisterGDPRConsent()
+    {
+        /* registerGDPRConsent is a special kind of hook that doesn't need a listener, see :
+           https://build.prestashop.com/howtos/module/how-to-make-your-module-compliant-with-prestashop-official-gdpr-compliance-module/
+          However since Prestashop 1.7.8, modules must implement a listener for all the hooks they register: a check is made
+          at module installation.
+        */
+    }
 }
