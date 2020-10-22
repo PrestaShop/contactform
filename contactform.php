@@ -62,7 +62,7 @@ class Contactform extends Module implements WidgetInterface
 
         $this->displayName = $this->trans('Contact form', [], 'Modules.Contactform.Admin');
         $this->description = $this->trans(
-            'Adds a contact form to the "Contact us" page.',
+            'Help your customers get in touch when they need, add a contact form on your store.',
             [],
             'Modules.Contactform.Admin'
         );
