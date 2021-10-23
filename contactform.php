@@ -85,13 +85,7 @@ class Contactform extends Module implements WidgetInterface
      */
     public function getContent()
     {
-        $message = $this->trans(
-            'For even more security on your website forms, consult our Security & Access modules category on the %link%',
-            ['%link%' => $this->getSecurityMarketPlaceLink()],
-            'Modules.Contactform.Admin'
-        );
-        $html = "<div class='alert alert-info'>$message</div>";
-        $html .= $this->renderForm();
+        $html = $this->renderForm();
 
         if (Tools::getValue(self::SUBMIT_NAME)) {
             Configuration::updateValue(
@@ -107,41 +101,6 @@ class Contactform extends Module implements WidgetInterface
         }
 
         return $html;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSecurityMarketPlaceLink()
-    {
-        $codes = [
-            'FR' => 'securite-access',
-            'EN' => 'website-security-access',
-            'ES' => 'seguridad-y-accesos',
-            'DE' => 'sicherheit-brechtigungen',
-            'IT' => 'security-access',
-            'NL' => 'veiligheid-toegang',
-            'PL' => 'bezpieczestwa-dostepu',
-            'PT' => 'seguranca-acesso',
-            'RU' => 'website-security-access',
-        ];
-
-        $languageCode = Tools::strtoupper($this->context->language->language_code);
-        if (empty($codes[$languageCode])) {
-            $languageCode = 'EN';
-        }
-
-        return sprintf(
-            '<a href="%1$s">%2$s</a>',
-            sprintf(
-                'https://addons.prestashop.com/%s/429-%s?utm_source=back-office&' .
-                'utm_medium=native-contactform&utm_campaign=back-office-%s&utm_content=security',
-                Tools::strtolower($languageCode),
-                $codes[$languageCode],
-                $languageCode
-            ),
-            $this->trans('PrestaShop Addons Marketplace', [], 'Admin.Modules.Feature')
-        );
     }
 
     /**
