@@ -23,7 +23,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  */
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -68,7 +67,7 @@ class Contactform extends Module implements WidgetInterface
         );
         $this->ps_versions_compliancy = [
             'min' => '1.7.2.0',
-            'max' => _PS_VERSION_
+            'max' => _PS_VERSION_,
         ];
     }
 
@@ -116,13 +115,13 @@ class Contactform extends Module implements WidgetInterface
             self::SEND_NOTIFICATION_EMAIL => Tools::getValue(
                 self::SEND_NOTIFICATION_EMAIL,
                 Configuration::get(self::SEND_NOTIFICATION_EMAIL)
-            )
+            ),
         ];
         $form = [
             'form' => [
                 'legend' => [
                     'title' => $this->trans('Parameters', [], 'Modules.Contactform.Admin'),
-                    'icon' => 'icon-envelope'
+                    'icon' => 'icon-envelope',
                 ],
                 'input' => [
                     [
@@ -144,14 +143,14 @@ class Contactform extends Module implements WidgetInterface
                             [
                                 'id' => self::SEND_CONFIRMATION_EMAIL . '_on',
                                 'value' => 1,
-                                'label' => $this->trans('Yes', [], 'Admin.Global')
+                                'label' => $this->trans('Yes', [], 'Admin.Global'),
                             ],
                             [
                                 'id' => self::SEND_CONFIRMATION_EMAIL . '_off',
                                 'value' => 0,
-                                'label' => $this->trans('No', [], 'Admin.Global')
-                            ]
-                        ]
+                                'label' => $this->trans('No', [], 'Admin.Global'),
+                            ],
+                        ],
                     ],
                     [
                         'type' => 'switch',
@@ -172,20 +171,20 @@ class Contactform extends Module implements WidgetInterface
                             [
                                 'id' => self::SEND_NOTIFICATION_EMAIL . '_on',
                                 'value' => 1,
-                                'label' => $this->trans('Yes', [], 'Admin.Global')
+                                'label' => $this->trans('Yes', [], 'Admin.Global'),
                             ],
                             [
                                 'id' => self::SEND_NOTIFICATION_EMAIL . '_off',
                                 'value' => 0,
-                                'label' => $this->trans('No', [], 'Admin.Global')
-                            ]
-                        ]
-                    ]
+                                'label' => $this->trans('No', [], 'Admin.Global'),
+                            ],
+                        ],
+                    ],
                 ],
                 'submit' => [
                     'name' => self::SUBMIT_NAME,
                     'title' => $this->trans('Save', [], 'Admin.Actions'),
-                ]
+                ],
             ],
         ];
         $helper = new HelperForm();
@@ -198,7 +197,7 @@ class Contactform extends Module implements WidgetInterface
         $helper->tpl_vars = [
             'fields_value' => $fieldsValue,
             'languages' => $this->context->controller->getLanguages(),
-            'id_language' => $this->context->language->id
+            'id_language' => $this->context->language->id,
         ];
 
         return $helper->generateForm([$form]);
@@ -225,7 +224,7 @@ class Contactform extends Module implements WidgetInterface
             $parsedUrl['query'] = $urlParams;
         }
 
-        /**
+        /*
          * http_build_query function is available through composer package jakeasmith/http_build_url
          */
         return http_build_url($parsedUrl);
@@ -254,6 +253,7 @@ class Contactform extends Module implements WidgetInterface
         if (Tools::isSubmit('submitMessage')) {
             $this->sendMessage();
 
+            $notifications = [];
             if (!empty($this->context->controller->errors)) {
                 $notifications['messages'] = $this->context->controller->errors;
                 $notifications['nw_error'] = true;
@@ -268,7 +268,7 @@ class Contactform extends Module implements WidgetInterface
             $this->createNewToken();
         }
 
-        if (($id_customer_thread = (int)Tools::getValue('id_customer_thread'))
+        if (($id_customer_thread = (int) Tools::getValue('id_customer_thread'))
             && $token = Tools::getValue('token')
         ) {
             $cm = new CustomerThread($id_customer_thread);
@@ -281,7 +281,7 @@ class Contactform extends Module implements WidgetInterface
         $this->contact['message'] = Tools::getValue('message');
         $this->contact['allow_file_upload'] = (bool) Configuration::get('PS_CUSTOMER_SERVICE_FILE_UPLOAD');
 
-        if (!(bool)Configuration::isCatalogMode()) {
+        if (!(bool) Configuration::isCatalogMode()) {
             $this->contact['orders'] = $this->getTemplateVarOrders();
         } else {
             $this->contact['orders'] = [];
@@ -304,7 +304,7 @@ class Contactform extends Module implements WidgetInterface
             'contact' => $this->contact,
             'notifications' => $notifications,
             'token' => $this->context->cookie->contactFormToken,
-            'id_module' => $this->id
+            'id_module' => $this->id,
         ];
     }
 
@@ -314,7 +314,7 @@ class Contactform extends Module implements WidgetInterface
     protected function createNewToken()
     {
         $this->context->cookie->contactFormToken = md5(uniqid());
-        $this->context->cookie->contactFormTokenTTL = time()+600;
+        $this->context->cookie->contactFormTokenTTL = time() + 600;
 
         return $this;
     }
@@ -333,7 +333,7 @@ class Contactform extends Module implements WidgetInterface
 
         if (isset($this->customer_thread['id_contact'])) {
             return [
-                $contacts[$this->customer_thread['id_contact']]
+                $contacts[$this->customer_thread['id_contact']],
             ];
         }
 
@@ -356,7 +356,7 @@ class Contactform extends Module implements WidgetInterface
             $customer_orders = Order::getCustomerOrders($this->context->customer->id);
 
             foreach ($customer_orders as $customer_order) {
-                $myOrder = new Order((int)$customer_order['id_order']);
+                $myOrder = new Order((int) $customer_order['id_order']);
 
                 if (Validate::isLoadedObject($myOrder)) {
                     $orders[$customer_order['id_order']] = $customer_order;
@@ -378,7 +378,7 @@ class Contactform extends Module implements WidgetInterface
                       (int) $this->customer_thread['id_order'] :
                       0;
 
-            $orders[$id_order]['products'][(int)$this->customer_thread['id_product']] = $this->context->controller->objectPresenter->present(
+            $orders[$id_order]['products'][(int) $this->customer_thread['id_product']] = $this->context->controller->objectPresenter->present(
                 new Product((int) $this->customer_thread['id_product'])
             );
         }
@@ -406,33 +406,51 @@ class Contactform extends Module implements WidgetInterface
                 [],
                 'Shop.Notifications.Error'
             );
-        } elseif (empty($message)) {
+
+            return;
+        }
+        if (empty($message)) {
             $this->context->controller->errors[] = $this->trans(
                 'The message cannot be blank.',
                 [],
                 'Shop.Notifications.Error'
             );
-        } elseif (!Validate::isCleanHtml($message)) {
+
+            return;
+        }
+        if (!Validate::isCleanHtml($message)) {
             $this->context->controller->errors[] = $this->trans(
                 'Invalid message',
                 [],
                 'Shop.Notifications.Error'
             );
-        } elseif (!($id_contact = (int)Tools::getValue('id_contact')) ||
-                  !(Validate::isLoadedObject($contact = new Contact($id_contact, $this->context->language->id)))
-        ) {
+
+            return;
+        }
+
+        $id_contact = (int) Tools::getValue('id_contact');
+        $contact = new Contact($id_contact, $this->context->language->id);
+
+        if (!$id_contact || !(Validate::isLoadedObject($contact))) {
             $this->context->controller->errors[] = $this->trans(
                 'Please select a subject from the list provided. ',
                 [],
                 'Modules.Contactform.Shop'
             );
-        } elseif (!empty($file_attachment['name']) && $file_attachment['error'] != 0) {
+
+            return;
+        }
+
+        if (!empty($file_attachment['name']) && $file_attachment['error'] != 0) {
             $this->context->controller->errors[] = $this->trans(
                 'An error occurred during the file-upload process.',
                 [],
                 'Modules.Contactform.Shop'
             );
-        } elseif (!empty($file_attachment['name']) &&
+
+            return;
+        }
+        if (!empty($file_attachment['name']) &&
                   !in_array(Tools::strtolower(Tools::substr($file_attachment['name'], -4)), $extension) &&
                   !in_array(Tools::strtolower(Tools::substr($file_attachment['name'], -5)), $extension)
         ) {
@@ -441,7 +459,10 @@ class Contactform extends Module implements WidgetInterface
                 [],
                 'Modules.Contactform.Shop'
             );
-        } elseif ($url !== ''
+
+            return;
+        }
+        if ($url !== ''
             || empty($serverToken)
             || $clientToken !== $serverToken
             || $clientTokenTTL < time()
@@ -452,83 +473,154 @@ class Contactform extends Module implements WidgetInterface
                 'Modules.Contactform.Shop'
             );
             $this->createNewToken();
-        } else {
-            $customer = $this->context->customer;
 
-            if (!$customer->id) {
-                $customer->getByEmail($from);
-            }
+            return;
+        }
 
-            /**
-             * Check that the order belongs to the customer.
-             */
-            $id_order = (int) Tools::getValue('id_order');
-            if (!empty($id_order)) {
-                $order = new Order($id_order);
-                $id_order = (int) $order->id_customer === (int) $customer->id ? $id_order : 0;
-            }
+        $customer = $this->context->customer;
 
-            $id_customer_thread = CustomerThread::getIdCustomerThreadByEmailAndIdOrder($from, $id_order);
+        if (!$customer->id) {
+            $customer->getByEmail($from);
+        }
 
-            if ($contact->customer_service) {
-                if ((int)$id_customer_thread) {
-                    $ct = new CustomerThread($id_customer_thread);
-                    $ct->status = 'open';
-                    $ct->id_lang = (int)$this->context->language->id;
-                    $ct->id_contact = (int)$id_contact;
-                    $ct->id_order = $id_order;
+        /**
+         * Check that the order belongs to the customer.
+         */
+        $id_order = (int) Tools::getValue('id_order');
+        if (!empty($id_order)) {
+            $order = new Order($id_order);
+            $id_order = (int) $order->id_customer === (int) $customer->id ? $id_order : 0;
+        }
 
-                    if ($id_product = (int)Tools::getValue('id_product')) {
-                        $ct->id_product = $id_product;
-                    }
-                    $ct->update();
-                } else {
-                    $ct = new CustomerThread();
-                    if (isset($customer->id)) {
-                        $ct->id_customer = (int)$customer->id;
-                    }
-                    $ct->id_shop = (int)$this->context->shop->id;
-                    $ct->id_order = $id_order;
+        $id_customer_thread = CustomerThread::getIdCustomerThreadByEmailAndIdOrder($from, $id_order);
 
-                    if ($id_product = (int)Tools::getValue('id_product')) {
-                        $ct->id_product = $id_product;
-                    }
-                    $ct->id_contact = (int)$id_contact;
-                    $ct->id_lang = (int)$this->context->language->id;
-                    $ct->email = $from;
-                    $ct->status = 'open';
-                    $ct->token = Tools::passwdGen(12);
-                    $ct->add();
+        if ($contact->customer_service) {
+            if ((int) $id_customer_thread) {
+                $ct = new CustomerThread($id_customer_thread);
+                $ct->status = 'open';
+                $ct->id_lang = (int) $this->context->language->id;
+                $ct->id_contact = (int) $id_contact;
+                $ct->id_order = $id_order;
+
+                if ($id_product = (int) Tools::getValue('id_product')) {
+                    $ct->id_product = $id_product;
                 }
+                $ct->update();
+            } else {
+                $ct = new CustomerThread();
+                if (isset($customer->id)) {
+                    $ct->id_customer = (int) $customer->id;
+                }
+                $ct->id_shop = (int) $this->context->shop->id;
+                $ct->id_order = $id_order;
 
-                if ($ct->id) {
-                    $lastMessage = CustomerMessage::getLastMessageForCustomerThread($ct->id);
-                    $testFileUpload = (isset($file_attachment['rename']) && !empty($file_attachment['rename']));
+                if ($id_product = (int) Tools::getValue('id_product')) {
+                    $ct->id_product = $id_product;
+                }
+                $ct->id_contact = (int) $id_contact;
+                $ct->id_lang = (int) $this->context->language->id;
+                $ct->email = $from;
+                $ct->status = 'open';
+                $ct->token = Tools::passwdGen(12);
+                $ct->add();
+            }
 
-                    // if last message is the same as new message (and no file upload), do not consider this contact
-                    if ($lastMessage != $message || $testFileUpload) {
-                        $cm = new CustomerMessage();
-                        $cm->id_customer_thread = $ct->id;
-                        $cm->message = $message;
+            if ($ct->id) {
+                $lastMessage = CustomerMessage::getLastMessageForCustomerThread($ct->id);
+                $testFileUpload = (isset($file_attachment['rename']) && !empty($file_attachment['rename']));
 
-                        if ($testFileUpload && rename($file_attachment['tmp_name'], _PS_UPLOAD_DIR_ . basename($file_attachment['rename']))) {
-                            $cm->file_name = $file_attachment['rename'];
-                            @chmod(_PS_UPLOAD_DIR_ . basename($file_attachment['rename']), 0664);
-                        }
-                        $cm->ip_address = (int)ip2long(Tools::getRemoteAddr());
-                        $cm->user_agent = $_SERVER['HTTP_USER_AGENT'];
+                // if last message is the same as new message (and no file upload), do not consider this contact
+                if ($lastMessage != $message || $testFileUpload) {
+                    $cm = new CustomerMessage();
+                    $cm->id_customer_thread = $ct->id;
+                    $cm->message = $message;
 
-                        if (!$cm->add()) {
-                            $this->context->controller->errors[] = $this->trans(
-                                'An error occurred while sending the message.',
-                                [],
-                                'Modules.Contactform.Shop'
-                            );
-                        }
-                    } else {
-                        $mailAlreadySend = true;
+                    if ($testFileUpload && rename($file_attachment['tmp_name'], _PS_UPLOAD_DIR_ . basename($file_attachment['rename']))) {
+                        $cm->file_name = $file_attachment['rename'];
+                        @chmod(_PS_UPLOAD_DIR_ . basename($file_attachment['rename']), 0664);
+                    }
+                    $cm->ip_address = (string) ip2long(Tools::getRemoteAddr());
+                    $cm->user_agent = $_SERVER['HTTP_USER_AGENT'];
+
+                    if (!$cm->add()) {
+                        $this->context->controller->errors[] = $this->trans(
+                            'An error occurred while sending the message.',
+                            [],
+                            'Modules.Contactform.Shop'
+                        );
                     }
                 } else {
+                    $mailAlreadySend = true;
+                }
+            } else {
+                $this->context->controller->errors[] = $this->trans(
+                    'An error occurred while sending the message.',
+                    [],
+                    'Modules.Contactform.Shop'
+                );
+            }
+        }
+        $sendConfirmationEmail = Configuration::get(self::SEND_CONFIRMATION_EMAIL);
+        $sendNotificationEmail = Configuration::get(self::SEND_NOTIFICATION_EMAIL);
+
+        if (!count($this->context->controller->errors)
+            && empty($mailAlreadySend)
+            && ($sendConfirmationEmail || $sendNotificationEmail)
+        ) {
+            $var_list = [
+                '{firstname}' => '',
+                '{lastname}' => '',
+                '{order_name}' => '-',
+                '{attached_file}' => '-',
+                '{message}' => Tools::nl2br(Tools::htmlentitiesUTF8(Tools::stripslashes($message))),
+                '{email}' => $from,
+                '{product_name}' => '',
+            ];
+
+            if (isset($customer->id)) {
+                $var_list['{firstname}'] = $customer->firstname;
+                $var_list['{lastname}'] = $customer->lastname;
+            }
+
+            if (isset($file_attachment['name'])) {
+                $var_list['{attached_file}'] = $file_attachment['name'];
+            }
+            $id_product = (int) Tools::getValue('id_product');
+
+            if ($id_order) {
+                $order = new Order((int) $id_order);
+                $var_list['{order_name}'] = $order->getUniqReference();
+                $var_list['{id_order}'] = (int) $order->id;
+            }
+
+            if ($id_product) {
+                $product = new Product((int) $id_product);
+
+                if (Validate::isLoadedObject($product) &&
+                    isset($product->name[Context::getContext()->language->id])
+                ) {
+                    $var_list['{product_name}'] = $product->name[Context::getContext()->language->id];
+                }
+            }
+
+            if ($sendNotificationEmail) {
+                if (empty($contact->email) || !Mail::Send(
+                    $this->context->language->id,
+                    'contact',
+                    $this->trans('Message from contact form', [], 'Emails.Subject') . ' [no_sync]',
+                    $var_list,
+                    $contact->email,
+                    $contact->name,
+                    null,
+                    null,
+                    $file_attachment,
+                    null,
+                    _PS_MAIL_DIR_,
+                    false,
+                    null,
+                    null,
+                    $from
+                )) {
                     $this->context->controller->errors[] = $this->trans(
                         'An error occurred while sending the message.',
                         [],
@@ -536,118 +628,49 @@ class Contactform extends Module implements WidgetInterface
                     );
                 }
             }
-            $sendConfirmationEmail = Configuration::get(self::SEND_CONFIRMATION_EMAIL);
-            $sendNotificationEmail = Configuration::get(self::SEND_NOTIFICATION_EMAIL);
 
-            if (!count($this->context->controller->errors)
-                && empty($mailAlreadySend)
-                && ($sendConfirmationEmail || $sendNotificationEmail)
-            ) {
-                $var_list = [
-                    '{firstname}' => '',
-                    '{lastname}' => '',
-                    '{order_name}' => '-',
-                    '{attached_file}' => '-',
-                    '{message}' => Tools::nl2br(Tools::htmlentitiesUTF8(Tools::stripslashes($message))),
-                    '{email}' =>  $from,
-                    '{product_name}' => '',
-                ];
+            if ($sendConfirmationEmail) {
+                $var_list['{message}'] = self::MESSAGE_PLACEHOLDER_FOR_OLDER_VERSION;
 
-                if (isset($customer->id)) {
-                    $var_list['{firstname}'] = $customer->firstname;
-                    $var_list['{lastname}'] = $customer->lastname;
-                }
-
-                if (isset($file_attachment['name'])) {
-                    $var_list['{attached_file}'] = $file_attachment['name'];
-                }
-                $id_product = (int)Tools::getValue('id_product');
-
-                if ($id_order) {
-                    $order = new Order((int)$id_order);
-                    $var_list['{order_name}'] = $order->getUniqReference();
-                    $var_list['{id_order}'] = (int)$order->id;
-                }
-
-                if ($id_product) {
-                    $product = new Product((int)$id_product);
-
-                    if (Validate::isLoadedObject($product) &&
-                        isset($product->name[Context::getContext()->language->id])
-                    ) {
-                        $var_list['{product_name}'] = $product->name[Context::getContext()->language->id];
-                    }
-                }
-
-                if ($sendNotificationEmail) {
-                    if (empty($contact->email) || !Mail::Send(
-                        $this->context->language->id,
-                        'contact',
-                        $this->trans('Message from contact form', [], 'Emails.Subject').' [no_sync]',
-                        $var_list,
-                        $contact->email,
-                        $contact->name,
-                        null,
-                        null,
-                        $file_attachment,
-                        null,
-                        _PS_MAIL_DIR_,
-                        false,
-                        null,
-                        null,
-                        $from
-                    )) {
-                        $this->context->controller->errors[] = $this->trans(
-                            'An error occurred while sending the message.',
-                            [],
-                            'Modules.Contactform.Shop'
-                        );
-                    }
-                }
-
-                if ($sendConfirmationEmail) {
-                    $var_list['{message}'] = self::MESSAGE_PLACEHOLDER_FOR_OLDER_VERSION;
-
-                    if (!Mail::Send(
-                        $this->context->language->id,
-                        'contact_form',
-                        ((isset($ct) && Validate::isLoadedObject($ct)) ? $this->trans(
-                            'Your message has been correctly sent #ct%thread_id% #tc%thread_token%',
-                            [
-                                '%thread_id%' => $ct->id,
-                                '%thread_token%' => $ct->token
-                            ],
-                            'Emails.Subject'
-                        ) : $this->trans('Your message has been correctly sent', [], 'Emails.Subject')),
-                        $var_list,
-                        $from,
-                        null,
-                        null,
-                        null,
-                        $file_attachment,
-                        null,
-                        _PS_MAIL_DIR_,
-                        false,
-                        null,
-                        null,
-                        $contact->email
-                    )) {
-                        $this->context->controller->errors[] = $this->trans(
-                            'An error occurred while sending the message.',
-                            [],
-                            'Modules.Contactform.Shop'
-                        );
-                    }
+                if (!Mail::Send(
+                    $this->context->language->id,
+                    'contact_form',
+                    ((isset($ct) && Validate::isLoadedObject($ct)) ? $this->trans(
+                        'Your message has been correctly sent #ct%thread_id% #tc%thread_token%',
+                        [
+                            '%thread_id%' => $ct->id,
+                            '%thread_token%' => $ct->token,
+                        ],
+                        'Emails.Subject'
+                    ) : $this->trans('Your message has been correctly sent', [], 'Emails.Subject')),
+                    $var_list,
+                    $from,
+                    null,
+                    null,
+                    null,
+                    $file_attachment,
+                    null,
+                    _PS_MAIL_DIR_,
+                    false,
+                    null,
+                    null,
+                    $contact->email
+                )) {
+                    $this->context->controller->errors[] = $this->trans(
+                        'An error occurred while sending the message.',
+                        [],
+                        'Modules.Contactform.Shop'
+                    );
                 }
             }
+        }
 
-            if (!count($this->context->controller->errors)) {
-                $this->context->controller->success[] = $this->trans(
-                    'Your message has been successfully sent to our team.',
-                    [],
-                    'Modules.Contactform.Shop'
-                );
-            }
+        if (!count($this->context->controller->errors)) {
+            $this->context->controller->success[] = $this->trans(
+                'Your message has been successfully sent to our team.',
+                [],
+                'Modules.Contactform.Shop'
+            );
         }
     }
 

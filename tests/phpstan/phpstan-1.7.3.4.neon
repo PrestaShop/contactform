@@ -1,0 +1,9 @@
+includes:
+	- %currentWorkingDirectory%/tests/phpstan/phpstan.neon
+
+parameters:
+  ignoreErrors:
+    - '#Access to an undefined property Cookie\:\:\$contactFormToken.#'
+    - '#Access to an undefined property Cookie\:\:\$contactFormTokenTTL.#'
+    - '#Call to method assign\(\) on an unknown class Smarty_Data.#'
+    - '#Parameter \#4 \$templateVars of static method MailCore\:\:send\(\) expects string, array<string, mixed> given.#'

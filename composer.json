@@ -13,8 +13,20 @@
     "php": ">=5.4.0",
     "jakeasmith/http_build_url": "^1"
   },
+  "require-dev": {
+    "prestashop/php-dev-tools": "~3.0"
+  },
   "config": {
-    "preferred-install": "dist"
+    "preferred-install": "dist",
+    "classmap-authoritative": true,
+    "optimize-autoloader": true,
+    "prepend-autoloader": false
+  },
+  "autoload": {
+    "classmap": [
+      "contactform.php",
+      "upgrade/"
+    ]
   },
   "type": "prestashop-module"
 }
