@@ -248,7 +248,7 @@ class Contactform extends Module implements WidgetInterface
      */
     public function getWidgetVariables($hookName = null, array $configuration = [])
     {
-        $notifications = false;
+        $notifications = [];
 
         if (Tools::isSubmit('submitMessage')) {
             $this->sendMessage();
