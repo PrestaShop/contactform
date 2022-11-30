@@ -46,7 +46,7 @@ class Contactform extends Module implements WidgetInterface
     /** @var Contact */
     protected $contact;
 
-    /** @var CustomerThread */
+    /** @var array */
     protected $customer_thread;
 
     public function __construct()
