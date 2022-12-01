@@ -2,7 +2,7 @@
 <module>
     <name>contactform</name>
     <displayName><![CDATA[Contact form]]></displayName>
-    <version><![CDATA[4.3.0]]></version>
+    <version><![CDATA[4.4.0]]></version>
     <description><![CDATA[Adds a contact form to the "Contact us" page.]]></description>
     <author><![CDATA[PrestaShop]]></author>
     <tab><![CDATA[front_office_features]]></tab>
