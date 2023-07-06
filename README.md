@@ -4,6 +4,10 @@
 
 Help your customers get in touch when they need, add a contact form on your store.
 
+## Compatibility
+
+PrestaShop: `1.7.2.0` or later
+
 ## Reporting issues
 
 You can report issues with this module in the main PrestaShop repository. [Click here to report an issue][report-issue]. 
