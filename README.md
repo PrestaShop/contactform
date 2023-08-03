@@ -8,6 +8,14 @@ Help your customers get in touch when they need, add a contact form on your stor
 
 PrestaShop: `1.7.2.0` or later
 
+## How to test
+
+Link to specs : https://docs.prestashop-project.org/functional-documentation/functional-documentation/ux-ui/back-office/improve/modules/contact-form
+
+In BO, enable the sending email options. Make sure that the emails are well received
+In FO, use contact form to send a message.
+Check with logged in/logged out customer with/out order made
+
 ## Reporting issues
 
 You can report issues with this module in the main PrestaShop repository. [Click here to report an issue][report-issue]. 
