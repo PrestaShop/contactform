@@ -331,7 +331,7 @@ class Contactform extends Module implements WidgetInterface
             $contacts[$one_contact['id_contact']] = $one_contact;
         }
 
-        if (isset($this->customer_thread['id_contact']) && $this->customer_thread['id_contact'] != 0) {
+        if (isset($this->customer_thread['id_contact']) && $this->customer_thread['id_contact'] !== 0) {
             return [
                 $contacts[$this->customer_thread['id_contact']],
             ];
