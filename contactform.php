@@ -567,12 +567,13 @@ class Contactform extends Module implements WidgetInterface
             && empty($mailAlreadySend)
             && ($sendConfirmationEmail || $sendNotificationEmail)
         ) {
+            $message = version_compare(_PS_VERSION_, '8.0.0', '>=') ? stripslashes($message) : Tools::stripslashes($message);
             $var_list = [
                 '{firstname}' => '',
                 '{lastname}' => '',
                 '{order_name}' => '-',
                 '{attached_file}' => '-',
-                '{message}' => Tools::nl2br(Tools::htmlentitiesUTF8(Tools::stripslashes($message))),
+                '{message}' => Tools::nl2br(Tools::htmlentitiesUTF8($message)),
                 '{email}' => $from,
                 '{product_name}' => '',
             ];
