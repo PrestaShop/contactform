@@ -54,7 +54,7 @@ class Contactform extends Module implements WidgetInterface
         $this->name = 'contactform';
         $this->author = 'PrestaShop';
         $this->tab = 'front_office_features';
-        $this->version = '4.4.1';
+        $this->version = '4.4.2';
         $this->bootstrap = true;
 
         parent::__construct();
