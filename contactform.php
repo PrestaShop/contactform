@@ -54,7 +54,7 @@ class Contactform extends Module implements WidgetInterface
         $this->name = 'contactform';
         $this->author = 'PrestaShop';
         $this->tab = 'front_office_features';
-        $this->version = '4.4.1';
+        $this->version = '4.4.2';
         $this->bootstrap = true;
 
         parent::__construct();
@@ -331,7 +331,7 @@ class Contactform extends Module implements WidgetInterface
             $contacts[$one_contact['id_contact']] = $one_contact;
         }
 
-        if (isset($this->customer_thread['id_contact'])) {
+        if (!empty($this->customer_thread['id_contact'])) {
             return [
                 $contacts[$this->customer_thread['id_contact']],
             ];
@@ -567,12 +567,13 @@ class Contactform extends Module implements WidgetInterface
             && empty($mailAlreadySend)
             && ($sendConfirmationEmail || $sendNotificationEmail)
         ) {
+            $message = version_compare(_PS_VERSION_, '8.0.0', '>=') ? stripslashes($message) : Tools::stripslashes($message);
             $var_list = [
                 '{firstname}' => '',
                 '{lastname}' => '',
                 '{order_name}' => '-',
                 '{attached_file}' => '-',
-                '{message}' => Tools::nl2br(Tools::htmlentitiesUTF8(Tools::stripslashes($message))),
+                '{message}' => Tools::nl2br(Tools::htmlentitiesUTF8($message)),
                 '{email}' => $from,
                 '{product_name}' => '',
             ];
