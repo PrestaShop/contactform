@@ -29,5 +29,6 @@ if (!defined('_PS_VERSION_')) {
 
 function upgrade_module_4_4_1($object)
 {
-    return $object->registerHook('displayContactContent');
+    return $object->registerHook('displayContactContent') &&
+        $object->registerHook('actionCaptchaValidation');
 }
