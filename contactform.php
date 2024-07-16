@@ -392,7 +392,7 @@ class Contactform extends Module implements WidgetInterface
      */
     public function sendMessage()
     {
-        Hook::exec('actionCaptchaValidation');
+        Hook::exec('actionSendMessageBefore');
         $extension = ['.txt', '.rtf', '.doc', '.docx', '.pdf', '.zip', '.png', '.jpeg', '.gif', '.jpg', '.webp'];
         $file_attachment = Tools::fileAttachment('fileUpload');
         $message = trim(Tools::getValue('message'));
