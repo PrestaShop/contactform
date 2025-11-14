@@ -530,7 +530,16 @@ class Contactform extends Module implements WidgetInterface
                         @chmod(_PS_UPLOAD_DIR_ . basename($file_attachment['rename']), 0664);
                     }
                     $cm->ip_address = (string) ip2long(Tools::getRemoteAddr());
-                    $cm->user_agent = $_SERVER['HTTP_USER_AGENT'];
+
+                    /*
+                     * Adjust user agent length depending on PrestaShop version used.
+                     * The limit was raised on 9.0.2.
+                     */
+                    if (version_compare(_PS_VERSION_, '9.0.2', '>=')) {
+                        $cm->user_agent = substr($_SERVER['HTTP_USER_AGENT'] ?? '', 0, 255);
+                    } else {
+                        $cm->user_agent = substr($_SERVER['HTTP_USER_AGENT'] ?? '', 0, 128);
+                    }
 
                     if (!$cm->add()) {
                         $this->context->controller->errors[] = $this->trans(
