@@ -55,7 +55,7 @@
             <span>{l s='Subject Heading' d='Modules.Contactform.Shop'}</span>
             <select name="id_contact">
               {foreach from=$contact.contacts item=contact_elt}
-                <option value="{$contact_elt.id_contact|escape:'htmlall':'UTF-8'}">{$contact_elt.name}</option>
+                <option value="{$contact_elt.id_contact|escape:'htmlall':'UTF-8'}">{$contact_elt.name|escape:'htmlall':'UTF-8'}</option>
               {/foreach}
             </select>
           </label>
