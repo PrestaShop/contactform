@@ -6,7 +6,7 @@ Help your customers get in touch when they need, add a contact form on your stor
 
 ## Compatibility
 
-PrestaShop: `1.7.2.0` or later
+PrestaShop: `8.0.0` or later
 
 ## How to test
 
