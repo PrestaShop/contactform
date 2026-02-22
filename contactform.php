@@ -66,7 +66,7 @@ class Contactform extends Module implements WidgetInterface
             'Modules.Contactform.Admin'
         );
         $this->ps_versions_compliancy = [
-            'min' => '8.0.0',
+            'min' => '8.1.0',
             'max' => _PS_VERSION_,
         ];
     }
