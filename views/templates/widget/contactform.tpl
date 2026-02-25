@@ -47,15 +47,19 @@
 
     {if !$notifications || $notifications.nw_error}
       <section class="form-fields">
-
-        <label>
-          <span>{l s='Subject Heading' d='Modules.Contactform.Shop'}</span>
-          <select name="id_contact">
-            {foreach from=$contact.contacts item=contact_elt}
-              <option value="{$contact_elt.id_contact|escape:'htmlall':'UTF-8'}">{$contact_elt.name}</option>
-            {/foreach}
-          </select>
-        </label>
+        {if $contact.contacts|count === 1}
+          {assign var=firstContact value=current($contact.contacts)}
+          <input type="hidden" name="id_contact" value="{$firstContact.id_contact|escape:'htmlall':'UTF-8'}"/>
+        {else}
+          <label>
+            <span>{l s='Subject Heading' d='Modules.Contactform.Shop'}</span>
+            <select name="id_contact">
+              {foreach from=$contact.contacts item=contact_elt}
+                <option value="{$contact_elt.id_contact|escape:'htmlall':'UTF-8'}">{$contact_elt.name|escape:'htmlall':'UTF-8'}</option>
+              {/foreach}
+            </select>
+          </label>
+        {/if}
 
         <label>
           <span>{l s='Email address' d='Modules.Contactform.Shop'}</span>
