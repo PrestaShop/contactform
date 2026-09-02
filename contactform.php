@@ -666,11 +666,22 @@ class Contactform extends Module implements WidgetInterface
         }
 
         if (!count($this->context->controller->errors)) {
-            $this->context->controller->success[] = $this->trans(
-                'Your message has been successfully sent to our team.',
-                [],
-                'Modules.Contactform.Shop'
-            );
+            if (!empty($mailAlreadySend)) {
+                // The message repeated the last one already on this thread, so nothing was stored and no
+                // email went out. Reporting it as sent is what makes this look like the form failing in
+                // silence: the merchant never receives it and the customer is told that it arrived.
+                $this->context->controller->success[] = $this->trans(
+                    'This message has already been sent to our team.',
+                    [],
+                    'Modules.Contactform.Shop'
+                );
+            } else {
+                $this->context->controller->success[] = $this->trans(
+                    'Your message has been successfully sent to our team.',
+                    [],
+                    'Modules.Contactform.Shop'
+                );
+            }
         }
     }
 
