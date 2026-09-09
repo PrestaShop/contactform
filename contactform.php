@@ -76,7 +76,34 @@ class Contactform extends Module implements WidgetInterface
      */
     public function install()
     {
-        return parent::install() && $this->registerHook(['registerGDPRConsent', 'displayContactContent']);
+        // Both settings are read with Configuration::get() before anything is sent, so
+        // leaving them unset ships a contact form that silently mails nobody. They are
+        // seeded differently on purpose: the notification goes to the shop's own contact
+        // address and is the point of the form, while the confirmation goes to whatever
+        // address the visitor typed, so it stays an explicit opt-in.
+        return parent::install()
+            && $this->seedDefault(self::SEND_NOTIFICATION_EMAIL, 1)
+            && $this->seedDefault(self::SEND_CONFIRMATION_EMAIL, 0)
+            && $this->registerHook(['registerGDPRConsent', 'displayContactContent']);
+    }
+
+    /**
+     * Writes a default only when this shop has no answer yet.
+     *
+     * Uninstalling a module does not remove its configuration, so install() runs again
+     * over existing values on a reset or a reinstall; without this guard that would
+     * silently overwrite a choice the merchant had already made.
+     *
+     * The check goes through Configuration::get() rather than Configuration::hasKey()
+     * because get() cascades shop -> shop group -> global, the way every read in this
+     * module does, and returns false only when no level holds the key at all. hasKey()
+     * inspects a single level, so under multistore it reports "absent" for a value the
+     * merchant set globally or on the shop group, and the default would override it.
+     */
+    private function seedDefault(string $key, int $value): bool
+    {
+        return false !== Configuration::get($key)
+            || (bool) Configuration::updateValue($key, $value);
     }
 
     /**
