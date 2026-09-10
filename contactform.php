@@ -56,6 +56,7 @@ class Contactform extends Module implements WidgetInterface
         $this->tab = 'front_office_features';
         $this->version = '5.0.0';
         $this->bootstrap = true;
+        $this->module_key = '2767cbe25d7dd178be899f39513a53df';
 
         parent::__construct();
 
