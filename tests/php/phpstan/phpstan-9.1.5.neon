@@ -1,0 +1,7 @@
+includes:
+	- %currentWorkingDirectory%/tests/php/phpstan/phpstan.neon
+
+parameters:
+  ignoreErrors:
+    - '#Access to an undefined property Cookie\:\:\$contactFormToken.#'
+    - '#Call to an undefined static method Tools\:\:stripslashes\(\).#'
