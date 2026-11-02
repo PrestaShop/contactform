@@ -10,8 +10,7 @@
     }
   ],
   "require": {
-    "php": ">=5.4.0",
-    "jakeasmith/http_build_url": "^1"
+    "php": ">=5.4.0"
   },
   "require-dev": {
     "prestashop/php-dev-tools": "~3.0"

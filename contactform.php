@@ -208,26 +208,11 @@ class Contactform extends Module implements WidgetInterface
      */
     protected function getModuleConfigurationPageLink()
     {
-        $parsedUrl = parse_url($this->context->link->getAdminLink('AdminModules', false));
-
-        $urlParams = http_build_query(
-            [
-                'configure' => $this->name,
-                'tab_module' => $this->tab,
-                'module_name' => $this->name,
-            ]
-        );
-
-        if (!empty($parsedUrl['query'])) {
-            $parsedUrl['query'] .= "&$urlParams";
-        } else {
-            $parsedUrl['query'] = $urlParams;
-        }
-
-        /*
-         * http_build_query function is available through composer package jakeasmith/http_build_url
-         */
-        return http_build_url($parsedUrl);
+        return $this->context->link->getAdminLink('AdminModules', false, [], [
+            'configure' => $this->name,
+            'tab_module' => $this->tab,
+            'module_name' => $this->name,
+        ]);
     }
 
     /**
