@@ -43,6 +43,11 @@ class Contactform extends Module implements WidgetInterface
     /** @var string */
     const SUBMIT_NAME = 'update-configuration';
 
+    /**
+     * Extensions accepted for the file attached to a message
+     */
+    const ALLOWED_FILE_EXTENSIONS = ['.txt', '.rtf', '.doc', '.docx', '.pdf', '.zip', '.png', '.jpeg', '.gif', '.jpg', '.webp'];
+
     /** @var Contact */
     protected $contact;
 
@@ -280,6 +285,7 @@ class Contactform extends Module implements WidgetInterface
         $this->contact['contacts'] = $this->getTemplateVarContact();
         $this->contact['message'] = Tools::getValue('message');
         $this->contact['allow_file_upload'] = (bool) Configuration::get('PS_CUSTOMER_SERVICE_FILE_UPLOAD');
+        $this->contact['allowed_file_extensions'] = implode(', ', self::ALLOWED_FILE_EXTENSIONS);
 
         if (!(bool) Configuration::isCatalogMode()) {
             $this->contact['orders'] = $this->getTemplateVarOrders();
@@ -392,7 +398,7 @@ class Contactform extends Module implements WidgetInterface
      */
     public function sendMessage()
     {
-        $extension = ['.txt', '.rtf', '.doc', '.docx', '.pdf', '.zip', '.png', '.jpeg', '.gif', '.jpg', '.webp'];
+        $extension = self::ALLOWED_FILE_EXTENSIONS;
         $file_attachment = Tools::fileAttachment('fileUpload');
         $message = trim(Tools::getValue('message'));
         $url = Tools::getValue('url');

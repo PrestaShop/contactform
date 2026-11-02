@@ -81,7 +81,8 @@
         {if $contact.allow_file_upload}
           <label>
             <span>{l s='Attach File' d='Modules.Contactform.Shop'}</span>
-            <input type="file" name="fileUpload" />
+            <input type="file" name="fileUpload" accept="{$contact.allowed_file_extensions|escape:'htmlall':'UTF-8'}" />
+            <small>{l s='Allowed formats: %formats%' sprintf=['%formats%' => $contact.allowed_file_extensions] d='Modules.Contactform.Shop'}</small>
           </label>
         {/if}
 
